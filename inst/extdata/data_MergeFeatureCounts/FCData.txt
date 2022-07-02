@@ -1,0 +1,5 @@
+Control1.featureCounts.gene.txt Control1 Control
+Control2.featureCounts.gene.txt Control2 Control
+Control3.featureCounts.gene.txt Control3 Control
+Treated1.featureCounts.gene.txt Treated1 Treated
+Treated2.featureCounts.gene.txt Treated2 Treated

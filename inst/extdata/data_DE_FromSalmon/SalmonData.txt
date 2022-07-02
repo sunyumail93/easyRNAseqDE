@@ -1,0 +1,6 @@
+PS.rep1.RNAseq.hg38.quant.sf PS.rep1 PS
+PS.rep2.RNAseq.hg38.quant.sf PS.rep2 PS
+ART.rep1.RNAseq.hg38.quant.sf ART.rep1 ART
+ART.rep2.RNAseq.hg38.quant.sf ART.rep2 ART
+RS.rep1.RNAseq.hg38.quant.sf RS.rep1 RS
+RS.rep2.RNAseq.hg38.quant.sf RS.rep2 RS
