@@ -1,2 +1,0 @@
-young_neg_muscle young_pos_muscle Compare_YoungMuscle_PosToNeg
-neg pos Compare_PosToNeg

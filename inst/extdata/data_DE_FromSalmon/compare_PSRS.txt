@@ -1,2 +1,0 @@
-PS RS Output.Human.RSvsPS
-PS ART Output.Human.ARTvsPS
