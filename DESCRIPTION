@@ -1,0 +1,25 @@
+Package: easyRNAseqDE
+Type: Package
+Title: easy RNAseq DE analysis
+Version: 0.1.0
+Author: c(person("Yu", "Sun", email = "ysun43@ur.rochester.edu",
+        role = c("cre", "aut"), comment = c(ORCID = "0000-0003-0333-2898")))
+Maintainer: The package maintainer <yourself@somewhere.net>
+Description: A easy to use wrapper package for RNAseq differential expression analysis.
+    This package is suitable for outputs from PipeRNAseq pipeline (https://github.com/sunyumail93/PipeRNAseq)
+License: GPL-3 + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Depends: R(>= 3.4.0)
+Imports:
+    tximport,
+    DESeq2,
+    RColorBrewer,
+    pheatmap,
+    ggplot2,
+    gplots,
+    cluster,
+    ggrepel,
+    readr,
+    reshape2
+RoxygenNote: 7.1.1

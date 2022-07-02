@@ -1,0 +1,5 @@
+135-LC_R1.rn6.featureCounts.gene.txt 135-LC_R1 Control
+135-P_R1.rn6.featureCounts.gene.txt 135-P_R1 AP
+136-LC_R1.rn6.featureCounts.gene.txt 136-LC_R1 Control
+136-P_R1.rn6.featureCounts.gene.txt 136-P_R1 AP
+137-LC_R1.rn6.featureCounts.gene.txt 137-LC_R1 Control

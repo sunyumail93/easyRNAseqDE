@@ -1,0 +1,6 @@
+page.hsa.PachyteneSpermatocytes.adult.rep1.RNAseq.hg38.quant.sf PS.rep1 PS
+page.hsa.PachyteneSpermatocytes.adult.rep2.RNAseq.hg38.quant.sf PS.rep2 PS
+page.hsa.PachyteneSpermatocytes.adult.rep3.RNAseq.hg38.quant.sf ART.rep1 ART
+page.hsa.RoundSpermatid.adult.rep1.RNAseq.hg38.quant.sf ART.rep2 ART
+page.hsa.RoundSpermatid.adult.rep2.RNAseq.hg38.quant.sf RS.rep2 RS
+page.hsa.RoundSpermatid.adult.rep3.RNAseq.hg38.quant.sf RS.rep3 RS
