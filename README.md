@@ -80,6 +80,8 @@ MergedCounts <- MergeFeatureCounts(SampleInfoFile = "SampleInfoFile.txt",
                    write_to_file = F)
 ```
 
+This MergedCounts table can be directly used in the DE analysis, as the input data for **easyDE_FromRawCounts**.
+
 ## 2, Merge salmon results into a table/matrix
 
 This function is compatible with the salmon output files from PipeRNAseq, with *.salmon.sf suffix.
