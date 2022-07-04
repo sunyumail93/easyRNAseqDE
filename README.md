@@ -33,6 +33,15 @@ library(easyRNAseqDE)
 data(featureCounts_count_matrix)
 
 head(featureCounts_count_matrix)
+
+# Output:
+              neg1 neg2 neg3 neg4 pos_1 pos_2 pos_3 control_1 control_2
+RP23-271O17.1    0    0    0    0     0     0     0         0         0
+Gm26206          0    0    0    0     0     0     0         0         0
+Xkr4             0    0    0    0     6     3     1         0         0
+RP23-317L18.1    0    0    0    0     0     0     0         0         0
+RP23-317L18.4    0    0    0    0     0     0     0         0         0
+RP23-317L18.3    0    0    0    0     0     0     0         0         0
 ```
 
 
