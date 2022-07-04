@@ -14,7 +14,7 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
 
   print("Running easyDE_FromSalmon")
 
-  #Preparing analysis
+  # Preparing analysis
   Info <- read.table(SampleInfo,col.names = c("Data","DataShortName","condition"),header = F)
   dddn <- dim(Info)[1]
   tx2gene <- read.table(uniqueMatchingFile)
@@ -28,10 +28,18 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
   condition <- Info$condition
   coldata <- data.frame(samples, condition)
 
+  # Fitting model
+  ddsTxi <- DESeqDataSetFromTximport(txi,
+                                     colData = coldata,
+                                     design = ~ condition)
+  dds <- DESeq(ddsTxi)
+  rld <- rlog(dds, blind = FALSE)   #This step takes time!
+
   if (createQuickomicsFiles == T){
     # Exp_data file
-    write.csv(log2(txi$abundance+1), file = paste0(QuickomicsPrefix, "_Exp_Log2Data.csv"))
-    write.csv(txi$abundance, file = paste0(QuickomicsPrefix, "_Exp_RawData.csv"))
+    write.csv(assay(rld), file = paste0(QuickomicsPrefix, "_Exp_rlogData.csv"))
+    write.csv(log2(txi$abundance+1), file = paste0(QuickomicsPrefix, "_Exp_Log2TPMData.csv"))
+    write.csv(txi$abundance, file = paste0(QuickomicsPrefix, "_Exp_RawTPMData.csv"))
 
     # sample meta
     colnames(coldata) <- c("sampleid","group")
@@ -90,25 +98,29 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
     res_ordered
 
     CountGenes(res_ordered)
+    #Log transformation
+    rld <- rlog(dds, blind = FALSE)   #This step takes time!
+    #get counts
+    counts_normalized <- counts(dds,normalized=TRUE)
 
     #Combining all results
     padjCutoff <- 0.05
     GeneName <- row.names(txi$counts)
-    CombinedAllInfo <- cbind(as.data.frame(res),GeneName,txi$counts,GeneName,txi$abundance)
+    CombinedAllInfo <- cbind(as.data.frame(res),GeneName,txi$counts,GeneName,txi$abundance,GeneName,as.data.frame(assay(rld)),GeneName,counts_normalized)
     CombinedAllInfo_sorted <- CombinedAllInfo[order(CombinedAllInfo$padj),]
-    OutputFileNameAllCombinedSortedTXT <- paste(OutputPrefix,".salmon.All.DEseq2GeneCountsTPM.txt",sep = "")  #This is the final everything combined output
+    OutputFileNameAllCombinedSortedTXT <- paste(OutputPrefix,".salmon.All.DEseq2GeneCountsTPMrlogNormcounts.txt",sep = "")  #This is the final everything combined output
     write.table(CombinedAllInfo_sorted,file = OutputFileNameAllCombinedSortedTXT,quote = F, sep = "\t", col.names = NA)
 
     print("Start plotting figures...This may take some time!")
     print("Running log transformation")
-    #Log transformation
-    rld <- rlog(dds, blind = FALSE)   #This step takes time!
 
     #Draw Distance Plot
     colors <- colorRampPalette( rev(brewer.pal(9, "Blues")) )(255)
     sampleDists <- dist(t(assay(rld)))
     sampleDistMatrix <- as.matrix( sampleDists )
     PlotNamesDistance <- paste(OutputPrefix,".salmon.Plot.DistancePlot.All.pdf",sep = "")
+    print("Starting figure generation...")
+    print("Figure 1: Distance plot")
     pdf(PlotNamesDistance,width = 11,height = 10,onefile=FALSE)
     pheatmap(sampleDistMatrix,
              clustering_distance_rows = sampleDists,
@@ -116,8 +128,17 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
              col = colors)
     dev.off()
 
+    #Draw PCA Plots
+    print("Figure 2: PCA")
+    plot_pca <- plotPCA(rld)
+    ggsave(paste(OutputPrefix,".salmon.Plot.PCA.1.pdf",sep = ""), plot_pca)
+    PCA_Data <- plotPCA(rld,intgroup = c("condition", "samples"),returnData = TRUE)
+    plot2 <- ggplot(PCA_Data, aes(x = `PC1`, y = `PC2`, color = samples, shape = condition)) +
+      geom_point(size = 3) + coord_fixed()
+    ggsave(paste(OutputPrefix,".salmon.Plot.PCA.2.pdf",sep = ""), plot2)
+
     #Draw MA Plot
-    print("Plotting MA")
+    print("Figure 3: MA plot")
     PlotNamesMA <- paste(OutputPrefix,".salmon.Plot.MA.pdf",sep = "")
     pdf(PlotNamesMA,width = 12,height = 10)
     res_MA <- tryCatch(expr = {res_MA <- results(dds, addMLE=TRUE)},error=function(e) results(dds))
@@ -130,25 +151,44 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
     }
     dev.off()
 
-    #Draw PCA Plots
-    print("Plotting PCA")
-    plot_pca <- plotPCA(rld)
-    ggsave(paste(OutputPrefix,".salmon.Plot.PCA.1.pdf",sep = ""), plot_pca)
-    PCA_Data <- plotPCA(rld,intgroup = c("condition", "samples"),returnData = TRUE)
-    plot2 <- ggplot(PCA_Data, aes(x = `PC1`, y = `PC2`, color = samples, shape = condition)) +
-      geom_point(size = 3) + coord_fixed()
-    ggsave(paste(OutputPrefix,".salmon.Plot.PCA.2.pdf",sep = ""), plot2)
-
     #Draw volcano Plot
-    print("Plotting Volcano, using padj<0.05 as significant")
-    PlotNamesVolcano <- paste(OutputPrefix,".salmon.Plot.Volcano.pdf",sep = "")
+    print("Figure 4: Volcano plot")
+    padjCutoff=0.05
     res_ordered_vp <- as.data.frame(res_ordered)
-    res_ordered_vp$threshold <- as.factor( res_ordered_vp$padj < padjCutoff) #You can adjust threshold here
-    res_ordered_vp_noNA <- subset(res_ordered_vp,threshold != 'NA')
-    volcano <- ggplot(res_ordered_vp_noNA, aes(x=log2FoldChange, y=-log10(pvalue), color=threshold)) +
-      geom_point(alpha=0.4, size=0.8) +
-      xlab("log2 fold change") + ylab("-log10 p-value")
-    ggsave(paste(OutputPrefix,".salmon.Plot.Volcano.pdf",sep = ""), volcano)
+    res_ordered_vp_up <- subset(res_ordered_vp, res_ordered_vp$log2FoldChange > 0 & res_ordered_vp$padj < padjCutoff)
+    res_ordered_vp_down <- subset(res_ordered_vp, res_ordered_vp$log2FoldChange < 0 & res_ordered_vp$padj < padjCutoff)
+    res_ordered_vp_nochange <- subset(res_ordered_vp, res_ordered_vp$padj >= padjCutoff)
+    res_ordered_vp_up$Change <- "Up"
+    res_ordered_vp_down$Change <- "Down"
+    res_ordered_vp_nochange$Change <- "No change"
+    res_ordered_vp_final <- rbind(res_ordered_vp_up, res_ordered_vp_down, res_ordered_vp_nochange)   #The NA values in padj have been removed
+    ToPlotList <- c(row.names(res_ordered_vp_up)[1:10], row.names(res_ordered_vp_down)[1:10])
+    ToPlotListData <- res_ordered_vp_final[ToPlotList,]
+    plot3 <- ggplot(res_ordered_vp_final, aes(x=log2FoldChange, y=-log10(padj), color=Change, size=-log10(padj))) +
+      geom_point(alpha=0.4) +
+      scale_color_manual(labels = c("Down", "No change", "Up"), values=c("blue", "black", "red")) +
+      xlab(expression('Log'['2']*' Fold Change')) + ylab(expression('-Log'['10']*' (adjusted '* italic('p-value') * ')')) +
+      theme_classic() +
+      geom_hline(yintercept=-log10(0.05), linetype="dashed", color = "grey") +
+      geom_vline(xintercept=c(-2,2), linetype="dashed", color = "grey") +
+      geom_text_repel(
+        data=ToPlotListData,
+        aes(label = rownames(ToPlotListData)),
+        size          = 4,
+        box.padding   = 1.5,
+        point.padding = 0.5,
+        segment.color = "grey50")
+    ggsave(paste(OutputPrefix,".salmon.Plot.VolcanoPlot.pdf",sep = ""), width = 12,height = 10, plot3)
+
+    #Plot a top 50 genes' heatmap
+    print("Figure 5: Heatmap")
+    df <- data.frame(colData(dds))
+    df <- df[c("condition")]
+    heatColors <- colorRampPalette(c("blue", "white", "red"))(n = 500)
+    pdf(paste(OutputPrefix,".salmon.Plot.HeatmapTop50.pdf",sep = ""), width=30, height=30, onefile=FALSE)
+    pheatmap(assay(rld)[rownames(res_ordered)[1:50], ], scale="row", show_rownames=TRUE, annotation_col=df, col=heatColors, cellwidth = 50,cellheight = 35,legend = T,
+             fontsize_row=25,fontsize_col = 25,fontsize=25)
+    dev.off()
 
     #Create Quickomics files
     if (createQuickomicsFiles == T){
@@ -160,10 +200,7 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
         Comparison_current$P.Value <- Comparison_current$pvalue
         Comparison_current$logFC <- Comparison_current$log2FoldChange
         Comparison_current <- Comparison_current[,c("UniqueID", "test", "Adj.P.Value", "P.Value", "logFC")]
-        print(i)
-        print(dim(Comparison_current))
       }else{
-        print(i)
         Comparison_old <- Comparison_current
         Comparison_current <- as.data.frame(res)
         Comparison_current$UniqueID <- row.names(Comparison_current)
@@ -173,7 +210,6 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
         Comparison_current$logFC <- Comparison_current$log2FoldChange
         Comparison_current <- Comparison_current[,c("UniqueID", "test", "Adj.P.Value", "P.Value", "logFC")]
         Comparison_current <- rbind(Comparison_old, Comparison_current)
-        print(dim(Comparison_current))
       }
     }
 

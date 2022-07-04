@@ -1,4 +1,4 @@
-Control.mouse.rep1.RNAseq.mm10.quant.sf Control.RNAseq.rep1 IPS.RNAseq
-Control.mouse.rep1.RNAseq.trimmed.mm10.quant.sf Control.RPF.rep1 IPS.RPF
-Treated.mouse.rep1.RNAseq.mm10.quant.sf Treated.RNAseq.rep1 MEF.RNAseq
-Treated.mouse.rep1.RNAseq.trimmed.mm10.quant.sf Treated.RPF.rep1 MEF.RPF
+Control.mouse.rep1.RNAseq.mm10.quant.sf ControlA.rep1 ControlA
+Control.mouse.rep1.RNAseq.trimmed.mm10.quant.sf ControlB.rep1 ControlB
+Treated.mouse.rep1.RNAseq.mm10.quant.sf TreatedA.rep1 TreatedA
+Treated.mouse.rep1.RNAseq.trimmed.mm10.quant.sf TreatedB.rep1 TreatedB
