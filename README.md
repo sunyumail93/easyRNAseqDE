@@ -1,6 +1,8 @@
 # easyRNAseqDE
 An R package for RNAseq differential expression analysis and visualization, in an easy and reproducible way.
 
+This package is for the downstream analysis after running [PipeRNAseq](https://github.com/sunyumail93/PipeRNAseq). Please download PipeRNAseq output files to the local computer and perform these analysis.
+
 ## Software prerequisites
 
 This R package is designed to analyze RNAseq raw counts (produced by featureCounts from Subread) or TPM values from Salmon software.
@@ -19,6 +21,20 @@ ggrepel
 readr
 reshape2
 ```
+
+## Installation
+
+```
+library(devtools)
+install_github("sunyumail93/easyRNAseqDE")
+
+library(easyRNAseqDE)
+
+data(featureCounts_count_matrix)
+
+head(featureCounts_count_matrix)
+```
+
 
 ## 1, Merge featureCounts results into a table/matrix
 
@@ -148,7 +164,7 @@ Prefix.PCA.2.pdf
 Prefix.VolcanoPlot.pdf
 ```
 
-Quickomics files for the whole project:
+[Quickomics](https://github.com/interactivereport/Quickomics) files for the whole project:
 
 ```
 Two_DE_Analysis_Comparison_data.csv
@@ -214,7 +230,7 @@ Prefix.salmon.Plot.PCA.2.pdf
 Prefix.salmon.Plot.VolcanoPlot.pdf
 ```
 
-Quickomics files for the whole project:
+[Quickomics](https://github.com/interactivereport/Quickomics) files for the whole project:
 
 ```
 DEAnalysis_Comparison_data.csv
