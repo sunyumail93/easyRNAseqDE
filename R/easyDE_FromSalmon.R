@@ -134,7 +134,7 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
     ggplot2::ggsave(paste(OutputPrefix,".salmon.Plot.PCA.1.pdf",sep = ""), plot_pca)
     PCA_Data <- DESeq2::plotPCA(rld,intgroup = c("condition", "samples"),returnData = TRUE)
     plot2 <- ggplot2::ggplot(PCA_Data, ggplot2::aes(x = `PC1`, y = `PC2`, color = samples, shape = condition)) +
-      geom_point(size = 3) + coord_fixed()
+      ggplot2::geom_point(size = 3) + ggplot2::coord_fixed()
     ggsave(paste(OutputPrefix,".salmon.Plot.PCA.2.pdf",sep = ""), plot2)
 
     #Draw MA Plot
@@ -165,13 +165,13 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
     ToPlotList <- c(row.names(res_ordered_vp_up)[1:10], row.names(res_ordered_vp_down)[1:10])
     ToPlotListData <- res_ordered_vp_final[ToPlotList,]
     plot3 <- ggplot2::ggplot(res_ordered_vp_final, ggplot2::aes(x=log2FoldChange, y=-log10(padj), color=Change, size=-log10(padj))) +
-      geom_point(alpha=0.4) +
-      scale_color_manual(labels = c("Down", "No change", "Up"), values=c("blue", "black", "red")) +
-      xlab(expression('Log'['2']*' Fold Change')) + ylab(expression('-Log'['10']*' (adjusted '* italic('p-value') * ')')) +
-      theme_classic() +
-      geom_hline(yintercept=-log10(0.05), linetype="dashed", color = "grey") +
-      geom_vline(xintercept=c(-2,2), linetype="dashed", color = "grey") +
-      geom_text_repel(
+      ggplot2::geom_point(alpha=0.4) +
+      ggplot2::scale_color_manual(labels = c("Down", "No change", "Up"), values=c("blue", "black", "red")) +
+      ggplot2::xlab(expression('Log'['2']*' Fold Change')) + ggplot2::ylab(expression('-Log'['10']*' (adjusted '* italic('p-value') * ')')) +
+      ggplot2::theme_classic() +
+      ggplot2::geom_hline(yintercept=-log10(0.05), linetype="dashed", color = "grey") +
+      ggplot2::geom_vline(xintercept=c(-2,2), linetype="dashed", color = "grey") +
+      ggrepel::geom_text_repel(
         data=ToPlotListData,
         ggplot2::aes(label = rownames(ToPlotListData)),
         size          = 4,
