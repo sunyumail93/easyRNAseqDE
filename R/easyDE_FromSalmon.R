@@ -115,7 +115,7 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
     print("Running log transformation")
 
     #Draw Distance Plot
-    colors <- colorRampPalette( rev(brewer.pal(9, "Blues")) )(255)
+    colors <- colorRampPalette( rev(RColorBrewer::brewer.pal(9, "Blues")) )(255)
     sampleDists <- dist(t(SummarizedExperiment::assay(rld)))
     sampleDistMatrix <- as.matrix( sampleDists )
     PlotNamesDistance <- paste(OutputPrefix,".salmon.Plot.DistancePlot.All.pdf",sep = "")
