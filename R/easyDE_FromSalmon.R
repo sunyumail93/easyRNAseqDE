@@ -135,7 +135,7 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
     PCA_Data <- DESeq2::plotPCA(rld,intgroup = c("condition", "samples"),returnData = TRUE)
     plot2 <- ggplot2::ggplot(PCA_Data, ggplot2::aes(x = `PC1`, y = `PC2`, color = samples, shape = condition)) +
       ggplot2::geom_point(size = 3) + ggplot2::coord_fixed()
-    ggsave(paste(OutputPrefix,".salmon.Plot.PCA.2.pdf",sep = ""), plot2)
+    ggplot2::ggsave(paste(OutputPrefix,".salmon.Plot.PCA.2.pdf",sep = ""), plot2)
 
     #Draw MA Plot
     print("Figure 3: MA plot")
