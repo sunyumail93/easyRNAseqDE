@@ -101,7 +101,7 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
     #Log transformation
     rld <- DESeq2::rlog(dds, blind = FALSE)   #This step takes time!
     #get counts
-    counts_normalized <- counts(dds,normalized=TRUE)
+    counts_normalized <- DESeq2::counts(dds,normalized=TRUE)
 
     #Combining all results
     padjCutoff <- 0.05
