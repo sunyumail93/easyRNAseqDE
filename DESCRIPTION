@@ -10,7 +10,7 @@ Description: A easy to use wrapper package for RNAseq differential expression an
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
-Depends: R(>= 3.4.0)
+Depends: R(>= 3.5.0)
 Imports:
     tximport,
     DESeq2,
