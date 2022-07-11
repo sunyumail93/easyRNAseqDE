@@ -133,7 +133,7 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
     plot_pca <- DESeq2::plotPCA(rld)
     ggplot2::ggsave(paste(OutputPrefix,".salmon.Plot.PCA.1.pdf",sep = ""), plot_pca)
     PCA_Data <- DESeq2::plotPCA(rld,intgroup = c("condition", "samples"),returnData = TRUE)
-    plot2 <- ggplot2::ggplot(PCA_Data, aes(x = `PC1`, y = `PC2`, color = samples, shape = condition)) +
+    plot2 <- ggplot2::ggplot(PCA_Data, ggplot2::aes(x = `PC1`, y = `PC2`, color = samples, shape = condition)) +
       geom_point(size = 3) + coord_fixed()
     ggsave(paste(OutputPrefix,".salmon.Plot.PCA.2.pdf",sep = ""), plot2)
 
@@ -164,7 +164,7 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
     res_ordered_vp_final <- rbind(res_ordered_vp_up, res_ordered_vp_down, res_ordered_vp_nochange)   #The NA values in padj have been removed
     ToPlotList <- c(row.names(res_ordered_vp_up)[1:10], row.names(res_ordered_vp_down)[1:10])
     ToPlotListData <- res_ordered_vp_final[ToPlotList,]
-    plot3 <- ggplot2::ggplot(res_ordered_vp_final, aes(x=log2FoldChange, y=-log10(padj), color=Change, size=-log10(padj))) +
+    plot3 <- ggplot2::ggplot(res_ordered_vp_final, ggplot2::aes(x=log2FoldChange, y=-log10(padj), color=Change, size=-log10(padj))) +
       geom_point(alpha=0.4) +
       scale_color_manual(labels = c("Down", "No change", "Up"), values=c("blue", "black", "red")) +
       xlab(expression('Log'['2']*' Fold Change')) + ylab(expression('-Log'['10']*' (adjusted '* italic('p-value') * ')')) +
@@ -173,7 +173,7 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
       geom_vline(xintercept=c(-2,2), linetype="dashed", color = "grey") +
       geom_text_repel(
         data=ToPlotListData,
-        aes(label = rownames(ToPlotListData)),
+        ggplot2::aes(label = rownames(ToPlotListData)),
         size          = 4,
         box.padding   = 1.5,
         point.padding = 0.5,
