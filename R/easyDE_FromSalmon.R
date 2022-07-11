@@ -22,7 +22,7 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
   names(Files) <- as.character(Info$DataShortName)
 
   # txi$counts are the raw counts, and txi$abundance are the TPM values
-  txi <- tximport(Files, type="salmon", tx2gene=tx2gene)
+  txi <- tximport::tximport(Files, type="salmon", tx2gene=tx2gene)
   print("Data resolved:")
   samples <- Info$DataShortName
   condition <- Info$condition
@@ -32,8 +32,8 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
   ddsTxi <- DESeqDataSetFromTximport(txi,
                                      colData = coldata,
                                      design = ~ condition)
-  dds <- DESeq(ddsTxi)
-  rld <- rlog(dds, blind = FALSE)   #This step takes time!
+  dds <- DESeq2::DESeq(ddsTxi)
+  rld <- DESeq2::rlog(dds, blind = FALSE)   #This step takes time!
 
   if (createQuickomicsFiles == T){
     # Exp_data file
