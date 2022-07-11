@@ -182,7 +182,7 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
 
     #Plot a top 50 genes' heatmap
     print("Figure 5: Heatmap")
-    df <- data.frame(colData(dds))
+    df <- data.frame(SummarizedExperiment::colData(dds))
     df <- df[c("condition")]
     heatColors <- colorRampPalette(c("blue", "white", "red"))(n = 500)
     pdf(paste(OutputPrefix,".salmon.Plot.HeatmapTop50.pdf",sep = ""), width=30, height=30, onefile=FALSE)
