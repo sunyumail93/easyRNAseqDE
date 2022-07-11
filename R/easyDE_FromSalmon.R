@@ -115,7 +115,7 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
     print("Running log transformation")
 
     #Draw Distance Plot
-    colors <- RColorBrewer::colorRampPalette( rev(brewer.pal(9, "Blues")) )(255)
+    colors <- colorRampPalette( rev(brewer.pal(9, "Blues")) )(255)
     sampleDists <- dist(t(SummarizedExperiment::assay(rld)))
     sampleDistMatrix <- as.matrix( sampleDists )
     PlotNamesDistance <- paste(OutputPrefix,".salmon.Plot.DistancePlot.All.pdf",sep = "")
@@ -184,7 +184,7 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
     print("Figure 5: Heatmap")
     df <- data.frame(colData(dds))
     df <- df[c("condition")]
-    heatColors <- RColorBrewer::colorRampPalette(c("blue", "white", "red"))(n = 500)
+    heatColors <- colorRampPalette(c("blue", "white", "red"))(n = 500)
     pdf(paste(OutputPrefix,".salmon.Plot.HeatmapTop50.pdf",sep = ""), width=30, height=30, onefile=FALSE)
     pheatmap::pheatmap(SummarizedExperiment::assay(rld)[rownames(res_ordered)[1:50], ], scale="row", show_rownames=TRUE, annotation_col=df, col=heatColors, cellwidth = 50,cellheight = 35,legend = T,
              fontsize_row=25,fontsize_col = 25,fontsize=25)
