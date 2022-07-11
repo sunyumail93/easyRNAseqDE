@@ -37,7 +37,7 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
 
   if (createQuickomicsFiles == T){
     # Exp_data file
-    write.csv(assay(rld), file = paste0(QuickomicsPrefix, "_Exp_rlogData.csv"))
+    write.csv(SummarizedExperiment::assay(rld), file = paste0(QuickomicsPrefix, "_Exp_rlogData.csv"))
     write.csv(log2(txi$abundance+1), file = paste0(QuickomicsPrefix, "_Exp_Log2TPMData.csv"))
     write.csv(txi$abundance, file = paste0(QuickomicsPrefix, "_Exp_RawTPMData.csv"))
 
@@ -106,7 +106,7 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
     #Combining all results
     padjCutoff <- 0.05
     GeneName <- row.names(txi$counts)
-    CombinedAllInfo <- cbind(as.data.frame(res),GeneName,txi$counts,GeneName,txi$abundance,GeneName,as.data.frame(assay(rld)),GeneName,counts_normalized)
+    CombinedAllInfo <- cbind(as.data.frame(res),GeneName,txi$counts,GeneName,txi$abundance,GeneName,as.data.frame(SummarizedExperiment::assay(rld)),GeneName,counts_normalized)
     CombinedAllInfo_sorted <- CombinedAllInfo[order(CombinedAllInfo$padj),]
     OutputFileNameAllCombinedSortedTXT <- paste(OutputPrefix,".salmon.All.DEseq2GeneCountsTPMrlogNormcounts.txt",sep = "")  #This is the final everything combined output
     write.table(CombinedAllInfo_sorted,file = OutputFileNameAllCombinedSortedTXT,quote = F, sep = "\t", col.names = NA)
@@ -116,7 +116,7 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
 
     #Draw Distance Plot
     colors <- RColorBrewer::colorRampPalette( rev(brewer.pal(9, "Blues")) )(255)
-    sampleDists <- dist(t(assay(rld)))
+    sampleDists <- dist(t(SummarizedExperiment::assay(rld)))
     sampleDistMatrix <- as.matrix( sampleDists )
     PlotNamesDistance <- paste(OutputPrefix,".salmon.Plot.DistancePlot.All.pdf",sep = "")
     print("Starting figure generation...")
@@ -186,7 +186,7 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
     df <- df[c("condition")]
     heatColors <- RColorBrewer::colorRampPalette(c("blue", "white", "red"))(n = 500)
     pdf(paste(OutputPrefix,".salmon.Plot.HeatmapTop50.pdf",sep = ""), width=30, height=30, onefile=FALSE)
-    pheatmap::pheatmap(assay(rld)[rownames(res_ordered)[1:50], ], scale="row", show_rownames=TRUE, annotation_col=df, col=heatColors, cellwidth = 50,cellheight = 35,legend = T,
+    pheatmap::pheatmap(SummarizedExperiment::assay(rld)[rownames(res_ordered)[1:50], ], scale="row", show_rownames=TRUE, annotation_col=df, col=heatColors, cellwidth = 50,cellheight = 35,legend = T,
              fontsize_row=25,fontsize_col = 25,fontsize=25)
     dev.off()
 
