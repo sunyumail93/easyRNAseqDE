@@ -37,7 +37,7 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
 
   if (createQuickomicsFiles == T){
     # Exp_data file
-    write.csv(DESeq2::assay(rld), file = paste0(QuickomicsPrefix, "_Exp_rlogData.csv"))
+    write.csv(assay(rld), file = paste0(QuickomicsPrefix, "_Exp_rlogData.csv"))
     write.csv(log2(txi$abundance+1), file = paste0(QuickomicsPrefix, "_Exp_Log2TPMData.csv"))
     write.csv(txi$abundance, file = paste0(QuickomicsPrefix, "_Exp_RawTPMData.csv"))
 
@@ -99,7 +99,7 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
 
     CountGenes(res_ordered)
     #Log transformation
-    rld <- rlog(dds, blind = FALSE)   #This step takes time!
+    rld <- DESeq2::rlog(dds, blind = FALSE)   #This step takes time!
     #get counts
     counts_normalized <- counts(dds,normalized=TRUE)
 
@@ -116,7 +116,7 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
 
     #Draw Distance Plot
     colors <- RColorBrewer::colorRampPalette( rev(brewer.pal(9, "Blues")) )(255)
-    sampleDists <- dist(t(DESeq2::assay(rld)))
+    sampleDists <- dist(t(assay(rld)))
     sampleDistMatrix <- as.matrix( sampleDists )
     PlotNamesDistance <- paste(OutputPrefix,".salmon.Plot.DistancePlot.All.pdf",sep = "")
     print("Starting figure generation...")
