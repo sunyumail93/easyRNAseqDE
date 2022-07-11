@@ -82,7 +82,7 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
     Files <- as.character(Info_Sub$Data)
     names(Files) <- as.character(Info_Sub$DataShortName)
 
-    txi <- tximport(Files, type="salmon", tx2gene=tx2gene)
+    txi <- tximport::tximport(Files, type="salmon", tx2gene=tx2gene)
     print("Data resolved:")
 
     #DESeq2 analysis
