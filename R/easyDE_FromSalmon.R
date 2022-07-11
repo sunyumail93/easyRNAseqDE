@@ -29,7 +29,7 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
   coldata <- data.frame(samples, condition)
 
   # Fitting model
-  ddsTxi <- DESeqDataSetFromTximport(txi,
+  ddsTxi <- DESeq2::DESeqDataSetFromTximport(txi,
                                      colData = coldata,
                                      design = ~ condition)
   dds <- DESeq2::DESeq(ddsTxi)
@@ -37,7 +37,7 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
 
   if (createQuickomicsFiles == T){
     # Exp_data file
-    write.csv(assay(rld), file = paste0(QuickomicsPrefix, "_Exp_rlogData.csv"))
+    write.csv(DESeq2::assay(rld), file = paste0(QuickomicsPrefix, "_Exp_rlogData.csv"))
     write.csv(log2(txi$abundance+1), file = paste0(QuickomicsPrefix, "_Exp_Log2TPMData.csv"))
     write.csv(txi$abundance, file = paste0(QuickomicsPrefix, "_Exp_RawTPMData.csv"))
 
@@ -89,11 +89,11 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
     samples <- Info_Sub$DataShortName
     condition <- Info_Sub$condition
     coldata <- data.frame(samples, condition)
-    ddsTxi <- DESeqDataSetFromTximport(txi,
+    ddsTxi <- DESeq2::DESeqDataSetFromTximport(txi,
                                        colData = coldata,
                                        design = ~ condition)
-    dds <- DESeq(ddsTxi)
-    res <- results(dds, contrast = c("condition", Condition_2, Condition_1))
+    dds <- DESeq2::DESeq(ddsTxi)
+    res <- DESeq2::results(dds, contrast = c("condition", Condition_2, Condition_1))
     res_ordered <- res[order(res$padj),]
     res_ordered
 
@@ -115,14 +115,14 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
     print("Running log transformation")
 
     #Draw Distance Plot
-    colors <- colorRampPalette( rev(brewer.pal(9, "Blues")) )(255)
-    sampleDists <- dist(t(assay(rld)))
+    colors <- RColorBrewer::colorRampPalette( rev(brewer.pal(9, "Blues")) )(255)
+    sampleDists <- dist(t(DESeq2::assay(rld)))
     sampleDistMatrix <- as.matrix( sampleDists )
     PlotNamesDistance <- paste(OutputPrefix,".salmon.Plot.DistancePlot.All.pdf",sep = "")
     print("Starting figure generation...")
     print("Figure 1: Distance plot")
     pdf(PlotNamesDistance,width = 11,height = 10,onefile=FALSE)
-    pheatmap(sampleDistMatrix,
+    pheatmap::pheatmap(sampleDistMatrix,
              clustering_distance_rows = sampleDists,
              clustering_distance_cols = sampleDists,
              col = colors)
@@ -131,9 +131,9 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
     #Draw PCA Plots
     print("Figure 2: PCA")
     plot_pca <- plotPCA(rld)
-    ggsave(paste(OutputPrefix,".salmon.Plot.PCA.1.pdf",sep = ""), plot_pca)
+    ggplot2::ggsave(paste(OutputPrefix,".salmon.Plot.PCA.1.pdf",sep = ""), plot_pca)
     PCA_Data <- plotPCA(rld,intgroup = c("condition", "samples"),returnData = TRUE)
-    plot2 <- ggplot(PCA_Data, aes(x = `PC1`, y = `PC2`, color = samples, shape = condition)) +
+    plot2 <- ggplot2::ggplot(PCA_Data, aes(x = `PC1`, y = `PC2`, color = samples, shape = condition)) +
       geom_point(size = 3) + coord_fixed()
     ggsave(paste(OutputPrefix,".salmon.Plot.PCA.2.pdf",sep = ""), plot2)
 
@@ -141,13 +141,13 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
     print("Figure 3: MA plot")
     PlotNamesMA <- paste(OutputPrefix,".salmon.Plot.MA.pdf",sep = "")
     pdf(PlotNamesMA,width = 12,height = 10)
-    res_MA <- tryCatch(expr = {res_MA <- results(dds, addMLE=TRUE)},error=function(e) results(dds))
+    res_MA <- tryCatch(expr = {res_MA <- DESeq2::results(dds, addMLE=TRUE)},error=function(e) DESeq2::results(dds))
     MaxValue <- max(res_MA$lfcMLE,na.rm = T) + 0.5
     if (is.finite(MaxValue) == F){
       MaxValue <- max(res_MA$lfcSE[is.finite(res_MA$lfcSE)],na.rm = T) + 0.5
-      plotMA(res_MA,main="MA-Plot of shrunken log2 fold changes",ylim=c(-MaxValue,MaxValue))
+      DESeq2::plotMA(res_MA,main="MA-Plot of shrunken log2 fold changes",ylim=c(-MaxValue,MaxValue))
     }else{
-      plotMA(res_MA,MLE=TRUE,main="MA-Plot of shrunken log2 fold changes",ylim=c(-MaxValue,MaxValue))
+      DESeq2::plotMA(res_MA,MLE=TRUE,main="MA-Plot of shrunken log2 fold changes",ylim=c(-MaxValue,MaxValue))
     }
     dev.off()
 
@@ -164,7 +164,7 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
     res_ordered_vp_final <- rbind(res_ordered_vp_up, res_ordered_vp_down, res_ordered_vp_nochange)   #The NA values in padj have been removed
     ToPlotList <- c(row.names(res_ordered_vp_up)[1:10], row.names(res_ordered_vp_down)[1:10])
     ToPlotListData <- res_ordered_vp_final[ToPlotList,]
-    plot3 <- ggplot(res_ordered_vp_final, aes(x=log2FoldChange, y=-log10(padj), color=Change, size=-log10(padj))) +
+    plot3 <- ggplot2::ggplot(res_ordered_vp_final, aes(x=log2FoldChange, y=-log10(padj), color=Change, size=-log10(padj))) +
       geom_point(alpha=0.4) +
       scale_color_manual(labels = c("Down", "No change", "Up"), values=c("blue", "black", "red")) +
       xlab(expression('Log'['2']*' Fold Change')) + ylab(expression('-Log'['10']*' (adjusted '* italic('p-value') * ')')) +
@@ -178,15 +178,15 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
         box.padding   = 1.5,
         point.padding = 0.5,
         segment.color = "grey50")
-    ggsave(paste(OutputPrefix,".salmon.Plot.VolcanoPlot.pdf",sep = ""), width = 12,height = 10, plot3)
+    ggplot2::ggsave(paste(OutputPrefix,".salmon.Plot.VolcanoPlot.pdf",sep = ""), width = 12,height = 10, plot3)
 
     #Plot a top 50 genes' heatmap
     print("Figure 5: Heatmap")
     df <- data.frame(colData(dds))
     df <- df[c("condition")]
-    heatColors <- colorRampPalette(c("blue", "white", "red"))(n = 500)
+    heatColors <- RColorBrewer::colorRampPalette(c("blue", "white", "red"))(n = 500)
     pdf(paste(OutputPrefix,".salmon.Plot.HeatmapTop50.pdf",sep = ""), width=30, height=30, onefile=FALSE)
-    pheatmap(assay(rld)[rownames(res_ordered)[1:50], ], scale="row", show_rownames=TRUE, annotation_col=df, col=heatColors, cellwidth = 50,cellheight = 35,legend = T,
+    pheatmap::pheatmap(assay(rld)[rownames(res_ordered)[1:50], ], scale="row", show_rownames=TRUE, annotation_col=df, col=heatColors, cellwidth = 50,cellheight = 35,legend = T,
              fontsize_row=25,fontsize_col = 25,fontsize=25)
     dev.off()
 
