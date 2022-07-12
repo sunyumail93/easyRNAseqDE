@@ -199,7 +199,7 @@ easyDE_FromRawCounts <- function(count_matrix, LabelFile, ComparisonFile, create
     #Create Quickomics files
     if (createQuickomicsFiles == T){
       if (i == 1){
-      Comparison_current <- DESeq2Result
+      Comparison_current = DESeq2Result
       print(dim(DESeq2Result))
       print(dim(Comparison_current))
       Comparison_current$UniqueID <- row.names(Comparison_current)
@@ -209,7 +209,7 @@ easyDE_FromRawCounts <- function(count_matrix, LabelFile, ComparisonFile, create
       Comparison_current$logFC <- Comparison_current$log2FoldChange
       Comparison_current <- Comparison_current[,c("UniqueID", "test", "Adj.P.Value", "P.Value", "logFC")]
       }else{
-        Comparison_old <- Comparison_current
+        Comparison_old = Comparison_current
         Comparison_current <- DESeq2Result
         Comparison_current$UniqueID <- row.names(Comparison_current)
         Comparison_current$test <- OutputFileName
