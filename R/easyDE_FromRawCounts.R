@@ -199,6 +199,7 @@ easyDE_FromRawCounts <- function(count_matrix, LabelFile, ComparisonFile, create
     #Create Quickomics files
     if (createQuickomicsFiles == T){
       if (i == 1){
+        print(i)
         print(dim(DESeq2Result))
         Comparison_current = DESeq2Result
         print(dim(Comparison_current))
