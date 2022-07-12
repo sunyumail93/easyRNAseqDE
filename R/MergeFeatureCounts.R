@@ -20,7 +20,7 @@ MergeFeatureCounts <- function(SampleInfoFile, OutputPrefix="default", write_to_
   #Processing
   Info <- read.table(SampleInfoFile,col.names = c("Data","DataShortName","condition"),header = F)
   Files <- as.character(Info$Data)
-  names(Files) <- as.character(Info$DataShortName)
+  names(Files) <- as.character(Info$Data)
 
   #Read the first data in
   FirstData <- read.table(Files[1],header=T)
