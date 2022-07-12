@@ -116,7 +116,7 @@ easyDE_FromRawCounts <- function(count_matrix, LabelFile, ComparisonFile, create
     PCA_Data <- DESeq2::plotPCA(rld,intgroup = c( "condition", "samples"),returnData = TRUE)
     plot2 <- ggplot2::ggplot(PCA_Data, ggplot2::aes(x = `PC1`, y = `PC2`, color = samples, shape = condition)) +
       ggplot2::geom_point(size = 3) + ggplot2::coord_fixed() +
-      ggplot2::ggtitle("PCA plot using all genes") + ggplot2::theme(plot.title = element_text(hjust = 0.5))
+      ggplot2::ggtitle("PCA plot using all genes") + ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))
     ggplot2::ggsave(paste(OutputFileName,".PCA.2.pdf",sep = ""), plot2)
 
     #Plot3: MA plot, do top 10 up and top 10 down significant genes
