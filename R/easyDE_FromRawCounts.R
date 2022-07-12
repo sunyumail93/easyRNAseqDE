@@ -138,9 +138,9 @@ easyDE_FromRawCounts <- function(count_matrix, LabelFile, ComparisonFile, create
       }else{
         Top10Up <- TopUp
       }
-      with(res_MA[Top10Up, ], {
-        tryCatch(expr = {points(baseMean, lfcMLE, col="red", cex=1, lwd=1)},error=function(e) points(baseMean, log2FoldChange, col="red", cex=1, lwd=1))
-        tryCatch(expr = {text(baseMean, lfcMLE, Top10Up, pos=2, col="red",cex=0.5)}, error=function(e) text(baseMean, log2FoldChange, Top10Up, pos=2, col="red",cex=0.5))
+      for (i in 1:dim(res_MA[Top10Up, ])[1]){
+        points(res_MA[Top10Up, ][i,1], res_MA[Top10Up, ][i,2], col="red", cex=1, lwd=1)
+        text(res_MA[Top10Up, ][i,1], res_MA[Top10Up, ][i,2], Top10Up[i], pos=2, col="red",cex=0.5)
       })
     }
     if (length(TopDown) > 0){
@@ -149,9 +149,9 @@ easyDE_FromRawCounts <- function(count_matrix, LabelFile, ComparisonFile, create
       }else{
         Top10Down <- TopDown
       }
-      with(res_MA[Top10Down, ], {
-        tryCatch(expr = {points(baseMean, lfcMLE, col="dodgerblue", cex=1, lwd=1)},error=function(e) points(baseMean, log2FoldChange, col="dodgerblue", cex=1, lwd=1))
-        tryCatch(expr = {text(baseMean, lfcMLE, Top10Down, pos=2, col="dodgerblue",cex=0.5)}, error=function(e) text(baseMean, log2FoldChange, Top10Down, pos=2, col="dodgerblue",cex=0.5))
+      for (i in 1:dim(res_MA[Top10Down, ])[1]){
+        points(res_MA[Top10Down, ][i,1], res_MA[Top10Down, ][i,2], col="red", cex=1, lwd=1)
+        text(res_MA[Top10Down, ][i,1], res_MA[Top10Down, ][i,2], Top10Down[i], pos=2, col="red",cex=0.5)
       })
     }
     dev.off()
