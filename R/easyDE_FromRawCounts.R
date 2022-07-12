@@ -121,7 +121,7 @@ easyDE_FromRawCounts <- function(count_matrix, LabelFile, ComparisonFile, create
 
     #Plot3: MA plot, do top 10 up and top 10 down significant genes
     print("Figure 3: MA plot")
-    res_MA <- tryCatch(expr = {res_MA <- results(dds, addMLE=TRUE, contrast = c("condition",Condition_2,Condition_1))},error=function(e) results(dds, contrast = c("condition",Condition_2,Condition_1)))
+    res_MA <- tryCatch(expr = {res_MA <- DESeq2::results(dds, addMLE=TRUE, contrast = c("condition",Condition_2,Condition_1))},error=function(e) DESeq2::results(dds, contrast = c("condition",Condition_2,Condition_1)))
     TopUp <- row.names(subset(res_ordered,log2FoldChange > 0 & padj < 0.05))
     TopDown <- row.names(subset(DESeq2Result,log2FoldChange < 0 & padj < 0.05))
     pdf(paste(OutputFileName,".MAPlot.Labeltop20.pdf",sep = ""),width = 12,height = 10)
