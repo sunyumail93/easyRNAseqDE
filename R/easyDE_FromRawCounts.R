@@ -150,8 +150,8 @@ easyDE_FromRawCounts <- function(count_matrix, LabelFile, ComparisonFile, create
         Top10Down <- TopDown
       }
       for (i in 1:dim(res_MA[Top10Down, ])[1]){
-        points(res_MA[Top10Down, ][i,1], res_MA[Top10Down, ][i,2], col="red", cex=1, lwd=1)
-        text(res_MA[Top10Down, ][i,1], res_MA[Top10Down, ][i,2], Top10Down[i], pos=2, col="red",cex=0.5)
+        points(res_MA[Top10Down, ][i,1], res_MA[Top10Down, ][i,2], col="dodgerblue", cex=1, lwd=1)
+        text(res_MA[Top10Down, ][i,1], res_MA[Top10Down, ][i,2], Top10Down[i], pos=2, col="dodgerblue",cex=0.5)
       }
     }
     dev.off()
@@ -200,6 +200,8 @@ easyDE_FromRawCounts <- function(count_matrix, LabelFile, ComparisonFile, create
     if (createQuickomicsFiles == T){
       if (i == 1){
       Comparison_current <- DESeq2Result
+      print(dim(DESeq2Result))
+      print(dim(Comparison_current))
       Comparison_current$UniqueID <- row.names(Comparison_current)
       Comparison_current$test <- OutputFileName
       Comparison_current$Adj.P.Value <- Comparison_current$padj
