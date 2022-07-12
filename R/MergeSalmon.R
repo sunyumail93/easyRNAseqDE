@@ -24,7 +24,7 @@ MergeSalmon <- function(SampleInfoFile, uniqueMatchingFile, OutputPrefix="defaul
   Files <- as.character(Info$Data)
   names(Files) <- as.character(Info$DataShortName)
 
-  txi <- tximport(Files, type="salmon", tx2gene=tx2gene)
+  txi <- tximport::tximport(Files, type="salmon", tx2gene=tx2gene)
   print("Data resolved:")
   head(txi$counts)
 
@@ -33,7 +33,7 @@ MergeSalmon <- function(SampleInfoFile, uniqueMatchingFile, OutputPrefix="defaul
   Merged <- data.frame(txi$counts,GeneNames,txi$abundance)
   colnames(Merged) <- c(colnames(txi$counts),"GeneNames",colnames(txi$counts))
   if (write_to_file == T){
-  write.table(Merged, file=OutputFileTXT,quote = F,col.names = NA, sep="\t")
+      write.table(Merged, file=OutputFileTXT,quote = F,col.names = NA, sep="\t")
   }
 
   print("MergeSalmon Done.")
