@@ -188,7 +188,7 @@ easyDE_FromRawCounts <- function(count_matrix, LabelFile, ComparisonFile, create
 
     #Draw a top 50 genes heatmap
     print("Figure 5: Heatmap")
-    df <- data.frame(colData(dds))
+    df <- data.frame(SummarizedExperiment::colData(dds))
     df <- df[c("condition","sizeFactor")]
     heatColors <- colorRampPalette(c("blue", "white", "red"))(n = 500)
     pdf(paste(OutputFileName,".HeatmapTop50.pdf",sep = ""), width=30, height=30, onefile=FALSE)
