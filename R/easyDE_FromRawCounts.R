@@ -141,7 +141,7 @@ easyDE_FromRawCounts <- function(count_matrix, LabelFile, ComparisonFile, create
       for (i in 1:dim(res_MA[Top10Up, ])[1]){
         points(res_MA[Top10Up, ][i,1], res_MA[Top10Up, ][i,2], col="red", cex=1, lwd=1)
         text(res_MA[Top10Up, ][i,1], res_MA[Top10Up, ][i,2], Top10Up[i], pos=2, col="red",cex=0.5)
-      })
+      }
     }
     if (length(TopDown) > 0){
       if (length(TopDown) > 10){
@@ -152,7 +152,7 @@ easyDE_FromRawCounts <- function(count_matrix, LabelFile, ComparisonFile, create
       for (i in 1:dim(res_MA[Top10Down, ])[1]){
         points(res_MA[Top10Down, ][i,1], res_MA[Top10Down, ][i,2], col="red", cex=1, lwd=1)
         text(res_MA[Top10Down, ][i,1], res_MA[Top10Down, ][i,2], Top10Down[i], pos=2, col="red",cex=0.5)
-      })
+      }
     }
     dev.off()
 
