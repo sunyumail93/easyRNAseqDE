@@ -149,6 +149,30 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
     }else{
       DESeq2::plotMA(res_MA,MLE=TRUE,main="MA-Plot of shrunken log2 fold changes",ylim=c(-MaxValue,MaxValue))
     }
+    TopUp <- row.names(subset(res_MA,log2FoldChange > 0 & padj < 0.05))
+    TopDown <- row.names(subset(res_MA,log2FoldChange < 0 & padj < 0.05))
+    if (length(TopUp) > 0){
+      if (length(TopUp) > 10){
+        Top10Up <- TopUp[1:10]
+      }else{
+        Top10Up <- TopUp
+      }
+      with(res_MA[Top10Up, ], {
+        tryCatch(expr = {points(baseMean, lfcMLE, col="red", cex=1, lwd=1)},error=function(e) points(baseMean, log2FoldChange, col="red", cex=1, lwd=1))
+        tryCatch(expr = {text(baseMean, lfcMLE, Top10Up, pos=2, col="red",cex=0.5)}, error=function(e) text(baseMean, log2FoldChange, Top10Up, pos=2, col="red",cex=0.5))
+      })
+    }
+    if (length(TopDown) > 0){
+      if (length(TopDown) > 10){
+        Top10Down <- TopDown[1:10]
+      }else{
+        Top10Down <- TopDown
+      }
+      with(res_MA[Top10Down, ], {
+        tryCatch(expr = {points(baseMean, lfcMLE, col="dodgerblue", cex=1, lwd=1)},error=function(e) points(baseMean, log2FoldChange, col="dodgerblue", cex=1, lwd=1))
+        tryCatch(expr = {text(baseMean, lfcMLE, Top10Down, pos=2, col="dodgerblue",cex=0.5)}, error=function(e) text(baseMean, log2FoldChange, Top10Down, pos=2, col="dodgerblue",cex=0.5))
+      })
+    }
     dev.off()
 
     #Draw volcano Plot
