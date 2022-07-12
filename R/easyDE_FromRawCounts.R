@@ -70,12 +70,12 @@ easyDE_FromRawCounts <- function(count_matrix, LabelFile, ComparisonFile, create
     coldata
 
     #DESeq2 analysis
-    dds <- DESeqDataSetFromMatrix(countData = FinalCounts, colData = coldata, design = ~ condition)
+    dds <- DESeq2::DESeqDataSetFromMatrix(countData = FinalCounts, colData = coldata, design = ~ condition)
     dds
-    dds <- DESeq(dds)
-    sizeFactor <- sizeFactors(dds)
+    dds <- DESeq2::DESeq(dds)
+    sizeFactor <- DESeq2::sizeFactors(dds)
     sizeFactor
-    res <- results(dds, contrast = c("condition", Condition_2, Condition_1))
+    res <- DESeq2::results(dds, contrast = c("condition", Condition_2, Condition_1))
     res_ordered <- res[order(res$padj),]
     res_ordered
 
@@ -95,15 +95,15 @@ easyDE_FromRawCounts <- function(count_matrix, LabelFile, ComparisonFile, create
     #Plot1: Distance plot to show the similarity of the data
     #Log transformation
     print("Running log transformation")
-    rld <- rlog(dds, blind = FALSE)   #This step may take time.
-    head(assay(rld), 3)
-    colors <- colorRampPalette( rev(brewer.pal(9, "Blues")) )(255)
-    sampleDists <- dist(t(assay(rld)))
+    rld <- DESeq2::rlog(dds, blind = FALSE)   #This step may take time.
+    head(SummarizedExperiment::assay(rld), 3)
+    colors <- colorRampPalette( rev(RColorBrewer::brewer.pal(9, "Blues")) )(255)
+    sampleDists <- dist(t(SummarizedExperiment::assay(rld)))
     sampleDistMatrix <- as.matrix( sampleDists )
     print("Starting figure generation...")
     print("Figure 1: Distance plot")
     pdf(paste(OutputFileName,".DistancePlot.pdf",sep = ""),onefile=FALSE)
-    pheatmap(sampleDistMatrix,
+    pheatmap::pheatmap(sampleDistMatrix,
              clustering_distance_rows = sampleDists,
              clustering_distance_cols = sampleDists,
              col = colors,main="Distance plot using all genes")
@@ -111,16 +111,13 @@ easyDE_FromRawCounts <- function(count_matrix, LabelFile, ComparisonFile, create
 
     #Plot2: PCA
     print("Figure 2: PCA")
-    # pdf(paste(OutputFileName,".PCA.1.pdf",sep = ""),onefile=FALSE)
-    plot_pca <- plotPCA(rld)
+    plot_pca <- DESeq2::plotPCA(rld)
     ggsave(paste(OutputFileName,".PCA.1.pdf",sep = ""), plot_pca)
-    # dev.off()
-    # pdf(paste(OutputFileName,".PCA.2.pdf",sep = ""),onefile=FALSE)
-    PCA_Data <- plotPCA(rld,intgroup = c( "condition", "samples"),returnData = TRUE)
-    plot2 <- ggplot(PCA_Data, aes(x = `PC1`, y = `PC2`, color = samples, shape = condition)) +
-      geom_point(size = 3) + coord_fixed() +
-      ggtitle("PCA plot using all genes") + theme(plot.title = element_text(hjust = 0.5))
-    ggsave(paste(OutputFileName,".PCA.2.pdf",sep = ""), plot2)
+    PCA_Data <- DESeq2::plotPCA(rld,intgroup = c( "condition", "samples"),returnData = TRUE)
+    plot2 <- ggplot2::ggplot(PCA_Data, ggplot2::aes(x = `PC1`, y = `PC2`, color = samples, shape = condition)) +
+      ggplot2::geom_point(size = 3) + ggplot2::coord_fixed() +
+      ggplot2::ggtitle("PCA plot using all genes") + ggplot2::theme(plot.title = element_text(hjust = 0.5))
+    ggplot2::ggsave(paste(OutputFileName,".PCA.2.pdf",sep = ""), plot2)
 
     #Plot3: MA plot, do top 10 up and top 10 down significant genes
     print("Figure 3: MA plot")
@@ -131,9 +128,9 @@ easyDE_FromRawCounts <- function(count_matrix, LabelFile, ComparisonFile, create
     MaxValue <- tryCatch(expr = {MaxValue <- max(res_MA$lfcMLE,na.rm = T) + 0.5},error=function(e) MaxValue <- max(res_MA$lfcSE,na.rm = T) + 0.5)
     if (is.finite(MaxValue) == F){
       MaxValue <- max(res_MA$lfcSE[is.finite(res_MA$lfcSE)],na.rm = T) + 0.5
-      plotMA(res_MA,main="MA-Plot of shrunken log2 fold changes",ylim=c(-MaxValue,MaxValue))
+      DESeq2::plotMA(res_MA,main="MA-Plot of shrunken log2 fold changes",ylim=c(-MaxValue,MaxValue))
     }else{
-      plotMA(res_MA,MLE=TRUE,main="MA-Plot of shrunken log2 fold changes",ylim=c(-MaxValue,MaxValue))
+      DESeq2::plotMA(res_MA,MLE=TRUE,main="MA-Plot of shrunken log2 fold changes",ylim=c(-MaxValue,MaxValue))
     }
     if (length(TopUp) > 0){
       if (length(TopUp) > 10){
@@ -155,8 +152,6 @@ easyDE_FromRawCounts <- function(count_matrix, LabelFile, ComparisonFile, create
       with(res_MA[Top10Down, ], {
         tryCatch(expr = {points(baseMean, lfcMLE, col="dodgerblue", cex=1, lwd=1)},error=function(e) points(baseMean, log2FoldChange, col="dodgerblue", cex=1, lwd=1))
         tryCatch(expr = {text(baseMean, lfcMLE, Top10Down, pos=2, col="dodgerblue",cex=0.5)}, error=function(e) text(baseMean, log2FoldChange, Top10Down, pos=2, col="dodgerblue",cex=0.5))
-        #points(baseMean, lfcMLE, col="dodgerblue", cex=1, lwd=1)
-        #text(baseMean, lfcMLE, Top10Down, pos=2, col="dodgerblue",cex=0.5)
       })
     }
     dev.off()
@@ -175,21 +170,21 @@ easyDE_FromRawCounts <- function(count_matrix, LabelFile, ComparisonFile, create
     ToPlotList <- c(row.names(res_ordered_vp_up)[1:10], row.names(res_ordered_vp_down)[1:10])
     ToPlotListData <- res_ordered_vp_final[ToPlotList,]
     # pdf(paste(OutputFileName,".VolcanoPlot.pdf",sep = ""),width = 12,height = 10)
-    plot3 <- ggplot(res_ordered_vp_final, aes(x=log2FoldChange, y=-log10(padj), color=Change, size=-log10(padj))) +
-      geom_point(alpha=0.4) +
-      scale_color_manual(labels = c("Down", "No change", "Up"), values=c("blue", "black", "red")) +
-      xlab(expression('Log'['2']*' Fold Change')) + ylab(expression('-Log'['10']*' (adjusted '* italic('p-value') * ')')) +
-      theme_classic() +
-      geom_hline(yintercept=-log10(0.05), linetype="dashed", color = "grey") +
-      geom_vline(xintercept=c(-2,2), linetype="dashed", color = "grey") +
-      geom_text_repel(
+    plot3 <- ggplot2::ggplot(res_ordered_vp_final, ggplot2::aes(x=log2FoldChange, y=-log10(padj), color=Change, size=-log10(padj))) +
+      ggplot2::geom_point(alpha=0.4) +
+      ggplot2::scale_color_manual(labels = c("Down", "No change", "Up"), values=c("blue", "black", "red")) +
+      ggplot2::xlab(expression('Log'['2']*' Fold Change')) + ggplot2::ylab(expression('-Log'['10']*' (adjusted '* italic('p-value') * ')')) +
+      ggplot2::theme_classic() +
+      ggplot2::geom_hline(yintercept=-log10(0.05), linetype="dashed", color = "grey") +
+      ggplot2::geom_vline(xintercept=c(-2,2), linetype="dashed", color = "grey") +
+      ggrepel::geom_text_repel(
         data=ToPlotListData,
-        aes(label = rownames(ToPlotListData)),
+        ggplot2::aes(label = rownames(ToPlotListData)),
         size          = 4,
         box.padding   = 1.5,
         point.padding = 0.5,
         segment.color = "grey50")
-    ggsave(paste(OutputFileName,".VolcanoPlot.pdf",sep = ""), width = 12,height = 10, plot3)
+    ggplot2::ggsave(paste(OutputFileName,".VolcanoPlot.pdf",sep = ""), width = 12,height = 10, plot3)
 
     #Draw a top 50 genes heatmap
     print("Figure 5: Heatmap")
@@ -197,7 +192,7 @@ easyDE_FromRawCounts <- function(count_matrix, LabelFile, ComparisonFile, create
     df <- df[c("condition","sizeFactor")]
     heatColors <- colorRampPalette(c("blue", "white", "red"))(n = 500)
     pdf(paste(OutputFileName,".HeatmapTop50.pdf",sep = ""), width=30, height=30, onefile=FALSE)
-    pheatmap(assay(rld)[rownames(res_ordered)[1:50], ], scale="row", show_rownames=TRUE, annotation_col=df, col=heatColors, cellwidth = 50,cellheight = 35,legend = T,
+    pheatmap::pheatmap(SummarizedExperiment::assay(rld)[rownames(res_ordered)[1:50], ], scale="row", show_rownames=TRUE, annotation_col=df, col=heatColors, cellwidth = 50,cellheight = 35,legend = T,
              fontsize_row=25,fontsize_col = 25,fontsize=25)
     dev.off()
 
