@@ -13,7 +13,7 @@
 easyDE_FromRawCounts <- function(count_matrix, LabelFile, ComparisonFile, createQuickomicsFiles=F, QuickomicsPrefix=NULL) {
 
   print("Running easyDE_FromRawCounts")
-  count_matrix <- as.data.frame(read.table(CountTableFile,header=TRUE,check.names = F))
+  #count_matrix <- as.data.frame(read.table(CountTableFile,header=TRUE,check.names = F))
   Label <- as.data.frame(read.table(LabelFile,header=F,col.names = c("Data","DataShortName","Condition")))
   print("Reading Label file...")
   Label
