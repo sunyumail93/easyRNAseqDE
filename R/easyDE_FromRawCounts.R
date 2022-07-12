@@ -112,7 +112,7 @@ easyDE_FromRawCounts <- function(count_matrix, LabelFile, ComparisonFile, create
     #Plot2: PCA
     print("Figure 2: PCA")
     plot_pca <- DESeq2::plotPCA(rld)
-    ggsave(paste(OutputFileName,".PCA.1.pdf",sep = ""), plot_pca)
+    ggplot2::ggsave(paste(OutputFileName,".PCA.1.pdf",sep = ""), plot_pca)
     PCA_Data <- DESeq2::plotPCA(rld,intgroup = c( "condition", "samples"),returnData = TRUE)
     plot2 <- ggplot2::ggplot(PCA_Data, ggplot2::aes(x = `PC1`, y = `PC2`, color = samples, shape = condition)) +
       ggplot2::geom_point(size = 3) + ggplot2::coord_fixed() +
