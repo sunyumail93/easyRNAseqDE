@@ -12,9 +12,10 @@
 
 easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, createQuickomicsFiles=F, QuickomicsPrefix=NULL) {
 
-  print("Running easyDE_FromSalmon")
+  print("Start running easyDE_FromSalmon")
 
   # Preparing analysis
+  print("Reading the SampleInfo file...")
   Info <- read.table(SampleInfo,col.names = c("Data","DataShortName","condition"),header = F)
   dddn <- dim(Info)[1]
   tx2gene <- read.table(uniqueMatchingFile)
@@ -23,7 +24,7 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
 
   # txi$counts are the raw counts, and txi$abundance are the TPM values
   txi <- tximport::tximport(Files, type="salmon", tx2gene=tx2gene)
-  print("Data resolved:")
+  print("Data resolved.")
   samples <- Info$DataShortName
   condition <- Info$condition
   coldata <- data.frame(samples, condition)
@@ -57,11 +58,13 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
   }
 
   #Get comparison
+  print("Reading the Comparison file...")
   Comparison <- read.table(ComparisonFile,header=F,col.names = c("Condition_1","Condition_2","OutputFileName"))
-  Comparison
+  print("Going to perform DE analysis on the following comparisons:")
+  print(Comparison)
 
-  print("*****************************************************************")
   print("Starting DE analysis")
+  print("*****************************************************************")
 
   #Paired differential expression analysis
   for (i in 1:dim(Comparison)[1]){
@@ -157,9 +160,9 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
       }else{
         Top10Up <- TopUp
       }
-      for (i in 1:dim(res_MA[Top10Up, ])[1]){
-        points(res_MA[Top10Up, ][i,1], res_MA[Top10Up, ][i,2], col="red", cex=1, lwd=1)
-        text(res_MA[Top10Up, ][i,1], res_MA[Top10Up, ][i,2], Top10Up[i], pos=2, col="red",cex=0.5)
+      for (j in 1:dim(res_MA[Top10Up, ])[1]){
+        points(res_MA[Top10Up, ][j,1], res_MA[Top10Up, ][j,2], col="red", cex=1, lwd=1)
+        text(res_MA[Top10Up, ][j,1], res_MA[Top10Up, ][j,2], Top10Up[j], pos=2, col="red",cex=0.5)
       }
     }
     if (length(TopDown) > 0){
@@ -168,9 +171,9 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
       }else{
         Top10Down <- TopDown
       }
-      for (i in 1:dim(res_MA[Top10Down, ])[1]){
-        points(res_MA[Top10Down, ][i,1], res_MA[Top10Down, ][i,2], col="red", cex=1, lwd=1)
-        text(res_MA[Top10Down, ][i,1], res_MA[Top10Down, ][i,2], Top10Down[i], pos=2, col="red",cex=0.5)
+      for (k in 1:dim(res_MA[Top10Down, ])[1]){
+        points(res_MA[Top10Down, ][k,1], res_MA[Top10Down, ][k,2], col="red", cex=1, lwd=1)
+        text(res_MA[Top10Down, ][k,1], res_MA[Top10Down, ][k,2], Top10Down[k], pos=2, col="dodgerblue",cex=0.5)
       }
     }
     dev.off()
@@ -237,11 +240,12 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
       }
     }
 
-    print(paste0("Done running comparisons: ",as.character(Compare_Sub$Condition_2)," v.s. ",as.character(Compare_Sub$Condition_1)))
+    print(paste0("Done running comparison: ",as.character(Compare_Sub$Condition_2)," v.s. ",as.character(Compare_Sub$Condition_1)))
     print("*****************************************************************")
-    cat("\n\n")
+    cat("\n")
   }
   if (createQuickomicsFiles == T){
     write.csv(Comparison_current, file = paste0(QuickomicsPrefix, "_Comparison_data.csv"), row.names = F)
   }
+  print("Pipeline finished.")
 }
