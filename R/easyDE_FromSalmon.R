@@ -30,6 +30,7 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
   coldata <- data.frame(samples, condition)
 
   # Fitting model
+  print("Merging samples...")
   ddsTxi <- DESeq2::DESeqDataSetFromTximport(txi,
                                      colData = coldata,
                                      design = ~ condition)
@@ -86,12 +87,13 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
     names(Files) <- as.character(Info_Sub$DataShortName)
 
     txi <- tximport::tximport(Files, type="salmon", tx2gene=tx2gene)
-    print("Data resolved:")
+    print("Data resolved.")
 
     #DESeq2 analysis
     samples <- Info_Sub$DataShortName
     condition <- Info_Sub$condition
     coldata <- data.frame(samples, condition)
+    print("Running DE analysis...")
     ddsTxi <- DESeq2::DESeqDataSetFromTximport(txi,
                                        colData = coldata,
                                        design = ~ condition)
