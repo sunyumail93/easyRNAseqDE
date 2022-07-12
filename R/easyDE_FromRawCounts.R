@@ -138,9 +138,9 @@ easyDE_FromRawCounts <- function(count_matrix, LabelFile, ComparisonFile, create
       }else{
         Top10Up <- TopUp
       }
-      for (i in 1:dim(res_MA[Top10Up, ])[1]){
-        points(res_MA[Top10Up, ][i,1], res_MA[Top10Up, ][i,2], col="red", cex=1, lwd=1)
-        text(res_MA[Top10Up, ][i,1], res_MA[Top10Up, ][i,2], Top10Up[i], pos=2, col="red",cex=0.5)
+      for (j in 1:dim(res_MA[Top10Up, ])[1]){
+        points(res_MA[Top10Up, ][j,1], res_MA[Top10Up, ][j,2], col="red", cex=1, lwd=1)
+        text(res_MA[Top10Up, ][j,1], res_MA[Top10Up, ][j,2], Top10Up[j], pos=2, col="red",cex=0.5)
       }
     }
     if (length(TopDown) > 0){
@@ -149,9 +149,9 @@ easyDE_FromRawCounts <- function(count_matrix, LabelFile, ComparisonFile, create
       }else{
         Top10Down <- TopDown
       }
-      for (i in 1:dim(res_MA[Top10Down, ])[1]){
-        points(res_MA[Top10Down, ][i,1], res_MA[Top10Down, ][i,2], col="dodgerblue", cex=1, lwd=1)
-        text(res_MA[Top10Down, ][i,1], res_MA[Top10Down, ][i,2], Top10Down[i], pos=2, col="dodgerblue",cex=0.5)
+      for (k in 1:dim(res_MA[Top10Down, ])[1]){
+        points(res_MA[Top10Down, ][k,1], res_MA[Top10Down, ][k,2], col="dodgerblue", cex=1, lwd=1)
+        text(res_MA[Top10Down, ][k,1], res_MA[Top10Down, ][k,2], Top10Down[k], pos=2, col="dodgerblue",cex=0.5)
       }
     }
     dev.off()
@@ -199,10 +199,7 @@ easyDE_FromRawCounts <- function(count_matrix, LabelFile, ComparisonFile, create
     #Create Quickomics files
     if (createQuickomicsFiles == T){
       if (i == 1){
-        print(i)
-        print(dim(DESeq2Result))
-        Comparison_current = DESeq2Result
-        print(dim(Comparison_current))
+        Comparison_current <- DESeq2Result
         Comparison_current$UniqueID <- row.names(Comparison_current)
         Comparison_current$test <- OutputFileName
         Comparison_current$Adj.P.Value <- Comparison_current$padj
