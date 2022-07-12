@@ -12,13 +12,14 @@
 
 easyDE_FromRawCounts <- function(count_matrix, LabelFile, ComparisonFile, createQuickomicsFiles=F, QuickomicsPrefix=NULL) {
 
-  print("Running easyDE_FromRawCounts")
+  print("Start running easyDE_FromRawCounts")
   #count_matrix <- as.data.frame(read.table(CountTableFile,header=TRUE,check.names = F))
   Label <- as.data.frame(read.table(LabelFile,header=F,col.names = c("Data","DataShortName","Condition")))
-  print("Reading Label file...")
+  print("Reading the Label file...")
   Label
   Comparison <- read.table(ComparisonFile,header=F,col.names = c("Condition_1","Condition_2","OutputFileName"))
-  print("Reading Comparison file...")
+  print("Reading the Comparison file...")
+  print("Going to perform DE analysis on the following comparisons:")
   print(Comparison)
 
   #Prepare data table
@@ -48,9 +49,9 @@ easyDE_FromRawCounts <- function(count_matrix, LabelFile, ComparisonFile, create
   write.csv(Quickomics_optional, file = paste0(QuickomicsPrefix, "_ProteinGeneName_optional.csv"), row.names = F)
   }
 
+  print("Starting DE analysis...")
   print("*****************************************************************")
-  print("Starting DE analysis")
-
+  
   #Paired differential expression analysis
   for (i in 1:dim(Comparison)[1]){
     Compare_Sub <- Comparison[i,]
@@ -219,11 +220,12 @@ easyDE_FromRawCounts <- function(count_matrix, LabelFile, ComparisonFile, create
       }
     }
 
-    print(paste0("Done running comparisons: ",as.character(Compare_Sub$Condition_2)," v.s. ",as.character(Compare_Sub$Condition_1)))
+    print(paste0("Done running comparison: ",as.character(Compare_Sub$Condition_2)," v.s. ",as.character(Compare_Sub$Condition_1)))
     print("*****************************************************************")
-    cat("\n\n")
+    cat("\n")
   }
   if (createQuickomicsFiles == T){
     write.csv(Comparison_current, file = paste0(QuickomicsPrefix, "_Comparison_data.csv"), row.names = F)
   }
+  print("Pipeline finished.")
 }
