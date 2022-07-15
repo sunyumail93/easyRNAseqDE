@@ -164,9 +164,9 @@ easyDE_FromRawCounts <- function(count_matrix, LabelFile, ComparisonFile, create
     res_ordered_vp_up <- subset(res_ordered_vp, res_ordered_vp$log2FoldChange > 0 & res_ordered_vp$padj < padjCutoff)
     res_ordered_vp_down <- subset(res_ordered_vp, res_ordered_vp$log2FoldChange < 0 & res_ordered_vp$padj < padjCutoff)
     res_ordered_vp_nochange <- subset(res_ordered_vp, res_ordered_vp$padj >= padjCutoff)
-    res_ordered_vp_up$Change <- "Up"
-    res_ordered_vp_down$Change <- "Down"
-    res_ordered_vp_nochange$Change <- "No change"
+    tryCatch(res_ordered_vp_up$Change <- "Up", error=function(e) {})
+    tryCatch(res_ordered_vp_down$Change <- "Down", error=function(e) {})
+    tryCatch(res_ordered_vp_nochange$Change <- "No change", error=function(e) {})
     res_ordered_vp_final <- rbind(res_ordered_vp_up, res_ordered_vp_down, res_ordered_vp_nochange)   #The NA values in padj have been removed
     ToPlotList <- c(row.names(res_ordered_vp_up)[1:10], row.names(res_ordered_vp_down)[1:10])
     ToPlotListData <- res_ordered_vp_final[ToPlotList,]
