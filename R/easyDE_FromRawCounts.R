@@ -131,8 +131,8 @@ easyDE_FromRawCounts <- function(count_matrix, LabelFile, ComparisonFile, create
     }else{
       DESeq2::plotMA(res_MA,MLE=TRUE,main="MA-Plot of shrunken log2 fold changes",ylim=c(-MaxValue,MaxValue))
     }
-    TopUp <- row.names(subset(res_MA,log2FoldChange > 0 & padj < 0.05))
-    TopDown <- row.names(subset(res_MA,log2FoldChange < 0 & padj < 0.05))
+    TopUp <- row.names(subset(res_ordered,log2FoldChange > 0 & padj < 0.05))
+    TopDown <- row.names(subset(res_ordered,log2FoldChange < 0 & padj < 0.05))
     if (length(TopUp) > 0){
       if (length(TopUp) > 10){
         Top10Up <- TopUp[1:10]
