@@ -90,7 +90,7 @@ easyDE_FromRawCounts <- function(count_matrix, LabelFile, ComparisonFile, create
     FinalCounts_ordered_normalized <- t(t(FinalCounts_ordered)/sizeFactor)
     FinalOutput <- cbind(DESeq2Result,GeneOrder,FinalCounts_ordered,GeneOrder,FinalCounts_ordered_normalized)
     head(FinalOutput,n=3)
-    FinalOutput_FileName <- paste(OutputFileName,".DESeq2.txt",sep="")
+    FinalOutput_FileName <- paste(OutputFileName,".RawCounts.All.DEseq2GeneCountsNormcounts.txt",sep="")
     write.table(FinalOutput,file = FinalOutput_FileName,quote = F,sep = "\t", col.names=NA)
 
     #Plot1: Distance plot to show the similarity of the data
