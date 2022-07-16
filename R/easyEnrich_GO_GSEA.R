@@ -8,7 +8,6 @@
 #' @param GOlog2FC_cutoff log2 fold change cutoff to define significant genes, default=0.05
 #' @param ShowTermNum Number of GOs to plot, default=20.
 #' @param forcerun Force to run the analysis if DE gene number<10, default=False.
-#' @importFrom enrichplot barplot
 #' @export
 #
 # Run GO and GSEA analysis using DE results. Please run this function after running easyDE_FromRawCounts or easyDE_FromSalmon.
