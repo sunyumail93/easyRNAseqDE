@@ -2,10 +2,7 @@
 % Please edit documentation in R/easyEnrich_GO_GSEA.R
 \name{easyEnrich_GO_GSEA}
 \alias{easyEnrich_GO_GSEA}
-\title{Run GO and GSEA analysis using DE results.
-Please run this function after running easyDE_FromRawCounts or easyDE_FromSalmon.
-If you would like to prepare your own files, the input format should be DESeq2 output table.
-The output results include GO plots (BP, CC, and MF), GSEA results and plots (Top 10 GSEA).}
+\title{Run GO and GSEA analysis using DE results.}
 \usage{
 easyEnrich_GO_GSEA(
   ComparisonFile,
@@ -19,7 +16,7 @@ easyEnrich_GO_GSEA(
 \arguments{
 \item{ComparisonFile}{DE comparison file with three columns: Condition_1 Condition_2 OutputPrefix.}
 
-\item{OrganDatabase}{Organism GO annotation database, for example, org.Mm.eg.db for mouse.}
+\item{OrganDatabase}{Organism GO annotation database, for example, org.Mm.eg.db for mouse, and org.Hs.eg.db for human.}
 
 \item{GOpajd_cutoff}{pajd cutoff to define significant genes, default=0.05.}
 
@@ -31,7 +28,4 @@ easyEnrich_GO_GSEA(
 }
 \description{
 Run GO and GSEA analysis using DE results.
-Please run this function after running easyDE_FromRawCounts or easyDE_FromSalmon.
-If you would like to prepare your own files, the input format should be DESeq2 output table.
-The output results include GO plots (BP, CC, and MF), GSEA results and plots (Top 10 GSEA).
 }

@@ -1,9 +1,6 @@
 #' Run GO and GSEA analysis using DE results.
-#' Please run this function after running easyDE_FromRawCounts or easyDE_FromSalmon.
-#' If you would like to prepare your own files, the input format should be DESeq2 output table.
-#' The output results include GO plots (BP, CC, and MF), GSEA results and plots (Top 10 GSEA).
 #' @param ComparisonFile DE comparison file with three columns: Condition_1 Condition_2 OutputPrefix.
-#' @param OrganDatabase Organism GO annotation database, for example, org.Mm.eg.db for mouse.
+#' @param OrganDatabase Organism GO annotation database, for example, org.Mm.eg.db for mouse, and org.Hs.eg.db for human.
 #' @param GOpajd_cutoff pajd cutoff to define significant genes, default=0.05.
 #' @param GOlog2FC_cutoff log2 fold change cutoff to define significant genes, default=0.05
 #' @param ShowTermNum Number of GOs to plot, default=20.
@@ -18,7 +15,7 @@ easyEnrich_GO_GSEA <- function(ComparisonFile, OrganDatabase, GOpajd_cutoff=0.05
   Comparison <- read.table(ComparisonFile,header=F,col.names = c("Condition_1","Condition_2","OutputFileName"))
   print("*****************************************************************")
 
-  for (i in 2:dim(Comparison)[1]){
+  for (i in 1:dim(Comparison)[1]){
     Compare_Sub <- Comparison[i,]
     print(paste0("Working on comparison ",i,": ",as.character(Compare_Sub$Condition_2)," v.s. ",as.character(Compare_Sub$Condition_1)))
     Condition_1 <- as.character(Comparison[i,1])
@@ -194,7 +191,7 @@ easyEnrich_GO_GSEA <- function(ComparisonFile, OrganDatabase, GOpajd_cutoff=0.05
     gene_list = sort(gene_list, decreasing = TRUE)
 
     print("Starting GSEA analysis")
-    gse <- gseGO(geneList=gene_list,
+    gse <- clusterProfiler::gseGO(geneList=gene_list,
                  ont ="ALL",
                  keyType = "SYMBOL",
                  minGSSize = 3,

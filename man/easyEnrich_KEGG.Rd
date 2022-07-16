@@ -2,11 +2,7 @@
 % Please edit documentation in R/easyEnrich_KEGG.R
 \name{easyEnrich_KEGG}
 \alias{easyEnrich_KEGG}
-\title{Run KEGG analysis using DE results.
-Please run this function after running easyDE_FromRawCounts or easyDE_FromSalmon.
-If you would like to prepare your own files, the input format should be DESeq2 output table.
-The output results include KEGG enrichment (using significant DE genes) and GSEA results (using all ranked genes).
-The output also includes a set of KEGG figures based on given KEGG pathway IDs.}
+\title{Run KEGG analysis using DE results.}
 \usage{
 easyEnrich_KEGG(
   ComparisonFile,
@@ -21,9 +17,9 @@ easyEnrich_KEGG(
 \arguments{
 \item{ComparisonFile}{DE comparison file with three columns: Condition_1 Condition_2 OutputPrefix.}
 
-\item{OrganDatabase}{Organism GO annotation database, for example, 'org.Mm.eg.db' for mouse.}
+\item{OrganDatabase}{Organism GO annotation database, for example, 'org.Mm.eg.db' for mouse, and org.Hs.eg.db for human.}
 
-\item{KEGGSpeciesName}{KEGG pathway species name, for example, 'mmu' for mouse.}
+\item{KEGGSpeciesName}{KEGG pathway species name, for example, 'mmu' for mouse, 'hsa' for human.}
 
 \item{KEGGPathwayFile}{A two-column file for KEGG pathways to plot: KEGG_id KEGG_full_name, default="NA"}
 
@@ -35,8 +31,4 @@ easyEnrich_KEGG(
 }
 \description{
 Run KEGG analysis using DE results.
-Please run this function after running easyDE_FromRawCounts or easyDE_FromSalmon.
-If you would like to prepare your own files, the input format should be DESeq2 output table.
-The output results include KEGG enrichment (using significant DE genes) and GSEA results (using all ranked genes).
-The output also includes a set of KEGG figures based on given KEGG pathway IDs.
 }
