@@ -21,5 +21,8 @@ Imports:
     cluster,
     ggrepel,
     readr,
-    reshape2
+    reshape2,
+    clusterProfiler,
+    DOSE,
+    pathview
 RoxygenNote: 7.1.1
