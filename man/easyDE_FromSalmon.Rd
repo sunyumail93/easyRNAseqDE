@@ -15,13 +15,16 @@ easyDE_FromSalmon(
 \arguments{
 \item{SampleInfo}{File name of the Sample information text file.}
 
-\item{uniqueMatchingFile}{Transcript to Gene unique matching file with two columns}
+\item{uniqueMatchingFile}{Transcript to Gene unique matching file with two columns.}
 
-\item{ComparisonFile}{DE comparison file with three columns: Condition_1 Condition_2 OutputPrefix}
+\item{ComparisonFile}{DE comparison file with three columns: Condition_1 Condition_2 OutputPrefix. Comparison direction: Condition_2 v.s. Condition_1.}
 
-\item{createQuickomicsFiles}{True or False, output Quickomics files}
+\item{createQuickomicsFiles}{True or False, output Quickomics files.}
 
-\item{QuickomicsPrefix}{Prefix for Quickomics files}
+\item{QuickomicsPrefix}{Prefix for Quickomics files.}
+}
+\value{
+For each comparison, this function will generate a DE summary table (OutputPrefix.RawCounts.All.DEseq2GeneCountsNormcounts.txt) and multiple plots, including Distance plot, Heatmap, 2 PCA plots, Volcano plot, and MA plot.
 }
 \description{
 Run DE analysis using salmon results

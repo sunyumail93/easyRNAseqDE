@@ -25,9 +25,12 @@ easyEnrich_KEGG(
 
 \item{GOpajd_cutoff}{pajd cutoff to define significant genes, default=0.05.}
 
-\item{GOlog2FC_cutoff}{log2 fold change cutoff to define significant genes, default=0.05}
+\item{GOlog2FC_cutoff}{log2 fold change cutoff to define significant genes, default=1.5.}
 
 \item{forcerun}{Force to run the analysis if DE gene number<10, default=False.}
+}
+\value{
+For each comparison, a KEGG summary table, and a folder containing KEGG plots using pathway names provided by KEGGPathwayFile will be generated.
 }
 \description{
 Run KEGG analysis using DE results.

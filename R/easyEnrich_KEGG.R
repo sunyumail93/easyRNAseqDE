@@ -4,9 +4,10 @@
 #' @param KEGGSpeciesName KEGG pathway species name, for example, 'mmu' for mouse, 'hsa' for human.
 #' @param KEGGPathwayFile A two-column file for KEGG pathways to plot: KEGG_id KEGG_full_name, default="NA"
 #' @param GOpajd_cutoff pajd cutoff to define significant genes, default=0.05.
-#' @param GOlog2FC_cutoff log2 fold change cutoff to define significant genes, default=0.05
+#' @param GOlog2FC_cutoff log2 fold change cutoff to define significant genes, default=1.5.
 #' @param forcerun Force to run the analysis if DE gene number<10, default=False.
 #' @importFrom pathview pathview
+#' @return For each comparison, a KEGG summary table, and a folder containing KEGG plots using pathway names provided by KEGGPathwayFile will be generated.
 #' @export
 #
 # Run KEGG analysis using DE results. Please run this function after running easyDE_FromRawCounts or easyDE_FromSalmon.

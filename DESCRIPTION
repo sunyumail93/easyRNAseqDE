@@ -20,9 +20,9 @@ Depends: R(>= 3.5.0),
     ggrepel,
     readr,
     reshape2,
+    clusterProfiler,
+    DOSE,
     pathview
 Imports:
-    DESeq2,
-    clusterProfiler,
-    DOSE
+    DESeq2
 RoxygenNote: 7.1.1

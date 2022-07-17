@@ -1,9 +1,10 @@
 #' Run DE analysis using salmon results
 #' @param SampleInfo File name of the Sample information text file.
-#' @param uniqueMatchingFile Transcript to Gene unique matching file with two columns
-#' @param ComparisonFile DE comparison file with three columns: Condition_1 Condition_2 OutputPrefix
-#' @param createQuickomicsFiles True or False, output Quickomics files
-#' @param QuickomicsPrefix Prefix for Quickomics files
+#' @param uniqueMatchingFile Transcript to Gene unique matching file with two columns.
+#' @param ComparisonFile DE comparison file with three columns: Condition_1 Condition_2 OutputPrefix. Comparison direction: Condition_2 v.s. Condition_1.
+#' @param createQuickomicsFiles True or False, output Quickomics files.
+#' @param QuickomicsPrefix Prefix for Quickomics files.
+#' @return For each comparison, this function will generate a DE summary table (OutputPrefix.RawCounts.All.DEseq2GeneCountsNormcounts.txt) and multiple plots, including Distance plot, Heatmap, 2 PCA plots, Volcano plot, and MA plot.
 #' @export
 #
 # This function takes salmon sf output files and two additional files (comparison, and condition annotation)

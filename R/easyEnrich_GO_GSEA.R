@@ -1,10 +1,11 @@
 #' Run GO and GSEA analysis using DE results.
-#' @param ComparisonFile DE comparison file with three columns: Condition_1 Condition_2 OutputPrefix.
-#' @param OrganDatabase Organism GO annotation database, for example, org.Mm.eg.db for mouse, and org.Hs.eg.db for human.
+#' @param ComparisonFile DE comparison file with three columns: Condition_1 Condition_2 OutputPrefix. Comparison direction: Condition_2 v.s. Condition_1.
+#' @param OrganDatabase Organism GO annotation database, for example, org.Mm.eg.db for mouse, and org.Hs.eg.db for human. Please install the required database packages before running this function.
 #' @param GOpajd_cutoff pajd cutoff to define significant genes, default=0.05.
-#' @param GOlog2FC_cutoff log2 fold change cutoff to define significant genes, default=0.05
+#' @param GOlog2FC_cutoff log2 fold change cutoff to define significant genes, default=1.5.
 #' @param ShowTermNum Number of GOs to plot, default=20.
 #' @param forcerun Force to run the analysis if DE gene number<10, default=False.
+#' @return For each comparison, three GO plots (BP, CC, and MF), a GSEA summary table, and a file containing Top 10 GSEA plots will be generated.
 #' @export
 #
 # Run GO and GSEA analysis using DE results. Please run this function after running easyDE_FromRawCounts or easyDE_FromSalmon.
