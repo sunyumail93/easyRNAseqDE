@@ -6,6 +6,7 @@
 #' @param GOpajd_cutoff pajd cutoff to define significant genes, default=0.05.
 #' @param GOlog2FC_cutoff log2 fold change cutoff to define significant genes, default=0.05
 #' @param forcerun Force to run the analysis if DE gene number<10, default=False.
+#' @importFrom pathview pathview
 #' @export
 #
 # Run KEGG analysis using DE results. Please run this function after running easyDE_FromRawCounts or easyDE_FromSalmon.
@@ -93,8 +94,7 @@ easyEnrich_KEGG <- function(ComparisonFile, OrganDatabase, KEGGSpeciesName, KEGG
         CurrentPathway=KEGG_id[j,]$PathwayID
         CurrentPathwayName=KEGG_id[j,]$Name
         print(paste0("Generating pathway map ", j," for: ", CurrentPathway, ", ", CurrentPathwayName))
-        detach("package:pathview", unload=TRUE)
-        pathview::pathview(gene.data  = gene_list_filtered,
+        pathview(gene.data  = gene_list_filtered,
                            pathway.id = CurrentPathway,
                            species    = KEGGSpeciesName,
                            out.suffix=OutputFileName)
