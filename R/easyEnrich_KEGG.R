@@ -94,7 +94,7 @@ easyEnrich_KEGG <- function(ComparisonFile, OrganDatabase, KEGGSpeciesName, KEGG
         CurrentPathway=KEGG_id[j,]$PathwayID
         CurrentPathwayName=KEGG_id[j,]$Name
         print(paste0("Generating pathway map ", j," for: ", CurrentPathway, ", ", CurrentPathwayName))
-        pathview(gene.data  = gene_list_filtered,
+        pathview::pathview(gene.data  = gene_list_filtered,
                            pathway.id = CurrentPathway,
                            species    = KEGGSpeciesName,
                            out.suffix=OutputFileName)

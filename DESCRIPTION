@@ -10,10 +10,8 @@ Description: A easy to use wrapper package for RNAseq differential expression an
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
-Depends: R(>= 3.5.0)
-Imports:
+Depends: R(>= 3.5.0),
     tximport,
-    DESeq2,
     RColorBrewer,
     pheatmap,
     ggplot2,
@@ -22,7 +20,9 @@ Imports:
     ggrepel,
     readr,
     reshape2,
-    clusterProfiler,
-    DOSE,
     pathview
+Imports:
+    DESeq2,
+    clusterProfiler,
+    DOSE
 RoxygenNote: 7.1.1
