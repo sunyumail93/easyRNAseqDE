@@ -86,10 +86,10 @@ easyDE_FromRawCounts <- function(count_matrix, LabelFile, ComparisonFile, create
     #Finalize and output the results
     #The FinalOuput has three parts: Original DESeq2 results, Raw counts, Normalized counts, separated by GeneList, sorted by padj
     DESeq2Result <- as.data.frame(res_ordered)
-    GeneOrder <- row.names(DESeq2Result)
-    FinalCounts_ordered <- FinalCounts[GeneOrder,]
+    GeneName <- row.names(DESeq2Result)
+    FinalCounts_ordered <- FinalCounts[GeneName,]
     FinalCounts_ordered_normalized <- t(t(FinalCounts_ordered)/sizeFactor)
-    FinalOutput <- cbind(DESeq2Result,GeneOrder,FinalCounts_ordered,GeneOrder,FinalCounts_ordered_normalized)
+    FinalOutput <- cbind(DESeq2Result,GeneName,FinalCounts_ordered,GeneName,FinalCounts_ordered_normalized)
     head(FinalOutput,n=3)
     FinalOutput_FileName <- paste(OutputFileName,".RawCounts.All.DEseq2GeneCountsNormcounts.txt",sep="")
     write.table(FinalOutput,file = FinalOutput_FileName,quote = F,sep = "\t", col.names=NA)

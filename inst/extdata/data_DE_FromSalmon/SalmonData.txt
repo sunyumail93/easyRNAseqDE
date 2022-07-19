@@ -1,6 +1,10 @@
-PS.rep1.RNAseq.hg38.quant.sf PS.rep1 PS
-PS.rep2.RNAseq.hg38.quant.sf PS.rep2 PS
-ART.rep1.RNAseq.hg38.quant.sf ART.rep1 ART
-ART.rep2.RNAseq.hg38.quant.sf ART.rep2 ART
-RS.rep1.RNAseq.hg38.quant.sf RS.rep1 RS
-RS.rep2.RNAseq.hg38.quant.sf RS.rep2 RS
+High.2838c3.rep1.RNAseq.mm10.quant.sf High.2838c3.rep1 High
+High_6499c4.rep2.RNAseq.mm10.quant.sf High_6499c4.rep2 High
+High_6620c1.rep3.RNAseq.mm10.quant.sf High_6620c1.rep3 High
+High_6555c3.rep5.RNAseq.mm10.quant.sf High_6555c3.rep5 High
+High_6556c4.rep7.RNAseq.mm10.quant.sf High_6556c4.rep7 High
+Low.6694c2.rep3.RNAseq.mm10.quant.sf Low.6694c2.rep3 Low
+Low_6556c3.rep5.RNAseq.mm10.quant.sf Low_6556c3.rep5 Low
+Low_6556c3.rep6.RNAseq.mm10.quant.sf Low_6556c3.rep6 Low
+Low_6694c2.rep7.RNAseq.mm10.quant.sf Low_6694c2.rep7 Low
+Low_2699c4.rep8.RNAseq.mm10.quant.sf Low_2699c4.rep8 Low

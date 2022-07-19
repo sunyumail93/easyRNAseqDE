@@ -1,0 +1,4 @@
+mmu04110 Cell_cycle
+mmu05010 Alzheimer_disease
+mmu04724 Glutamatergic_synapse
+mmu04660 T_cell_receptor_signaling_pathway

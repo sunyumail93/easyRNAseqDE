@@ -20,7 +20,12 @@ cluster
 ggrepel
 readr
 reshape2
+clusterProfiler
+DOSE
+pathview
 ```
+
+If you would like to perform GO, KEGG and GSEA analysis, the database related to the data species is also required, for example, org.Mm.eg.db for mouse, and org.Hs.eg.db for human. 
 
 ## Installation
 
@@ -29,21 +34,95 @@ library(devtools)
 install_github("sunyumail93/easyRNAseqDE")
 
 library(easyRNAseqDE)
-
-data(featureCounts_count_matrix)
-
-head(featureCounts_count_matrix)
-
-# Output:
-              neg1 neg2 neg3 neg4 pos_1 pos_2 pos_3 control_1 control_2
-RP23-271O17.1    0    0    0    0     0     0     0         0         0
-Gm26206          0    0    0    0     0     0     0         0         0
-Xkr4             0    0    0    0     6     3     1         0         0
-RP23-317L18.1    0    0    0    0     0     0     0         0         0
-RP23-317L18.4    0    0    0    0     0     0     0         0         0
-RP23-317L18.3    0    0    0    0     0     0     0         0         0
 ```
 
+## Quick start
+
+The easyRNAseqDE contains four six functions:
+
+- Two functions merge raw data from [PipeRNAseq](https://github.com/sunyumail93/PipeRNAseq) salmon or featureCounts output to a result table: **MergeFeatureCounts** and **MergeSalmon**.
+
+- Two functions perform the full DE analysis using salmon or featureCounts results: **easyDE_FromRawCounts** and **easyDE_FromSalmon**.
+
+- Two functions perform GO, GSEA and KEGG analysis: *easyEnrich_GO_GSEA* and *easyEnrich_KEGG*.
+
+Here is an example using the salmon test data to perform DE analysis within a minute:
+
+```
+library(easyRNAseqDE)
+
+# Set working directory
+setwd("/home/sunyumail93/Demo")
+
+# Copy the raw data to the working directory
+SalmonDataPath <- system.file("extdata", "data_DE_FromSalmon/", package="easyRNAseqDE")
+SalmonFilesPath <- list.files(path = SalmonDataPath, pattern = ".sf")
+file.copy(from=paste0(SalmonDataPath,SalmonFilesPath), to=CurrPath, 
+            overwrite = TRUE, recursive = FALSE, 
+            copy.mode = TRUE)
+
+# Retrieve data and file paths
+SampleInfo_path <- system.file("extdata", "data_DE_FromSalmon/SalmonData.txt", package="easyRNAseqDE")
+ComparisonFile_path <- system.file("extdata", "data_DE_FromSalmon/Comparisons.txt", package="easyRNAseqDE")
+uniqueMatchingFile_path <- system.file("extdata", "data_DE_FromSalmon/mm10.uniqMatching.txt", package="easyRNAseqDE")
+
+# DE analysis
+easyDE_FromSalmon(SampleInfo = SampleInfo_path,
+                  uniqueMatchingFile = uniqueMatchingFile_path,
+                  ComparisonFile = ComparisonFile_path, 
+                  createQuickomicsFiles=T, QuickomicsPrefix="Immunity2018")
+                  
+# GO and GSEA analysis
+easyEnrich_GO_GSEA(ComparisonFile = "Comparisons.txt", 
+                  OrganDatabase = "org.Mm.eg.db", 
+                  GOpajd_cutoff = 0.001, 
+                  GOlog2FC_cutoff = 2.5)
+
+# KEGG analysis
+KEGGPathway_file <- system.file("extdata", "data_DE_FromSalmon/PathwayID.txt", package="easyRNAseqDE")
+easyEnrich_KEGG(ComparisonFile = "Comparisons.txt", 
+                  OrganDatabase = "org.Mm.eg.db",
+                  KEGGSpeciesName = "mmu",
+                  KEGGPathwayFile = KEGGPathway_file)
+```
+
+Then we can upload the four csv files and visualize the results in [Quickomics](http://quickomics.bxgenomics.com/?unlisted=PRJ_Immunity2018_Cs9rRo).
+
+Here is another example using the featureCounts test data to perform DE analysis within a minute:
+
+```
+library(easyRNAseqDE)
+
+# Set working directory
+setwd("/home/sunyumail93/Demo")
+
+# Retrieve data and file paths
+data(featureCounts_count_matrix)
+SampleInfo_path <- system.file("extdata", "data_DE_FromRawCounts/SampleInfo.txt", package="easyRNAseqDE")
+ComparisonFile_path <- system.file("extdata", "data_DE_FromRawCounts/Comparisons.txt", package="easyRNAseqDE")
+
+# DE analysis
+easyDE_FromRawCounts(count_matrix = featureCounts_count_matrix, 
+                     LabelFile = SampleInfo_path, 
+                     ComparisonFile = ComparisonFile_path, 
+                     createQuickomicsFiles=T, 
+                     QuickomicsPrefix="Immunity2018_featureCounts")
+                     
+# GO and GSEA analysis
+easyEnrich_GO_GSEA(ComparisonFile = "Comparisons.txt", 
+                  OrganDatabase = "org.Mm.eg.db", 
+                  GOpajd_cutoff = 0.001, 
+                  GOlog2FC_cutoff = 2.5)
+
+# KEGG analysis
+KEGGPathway_file <- system.file("extdata", "data_DE_FromRawCounts/PathwayID.txt", package="easyRNAseqDE")
+easyEnrich_KEGG(ComparisonFile = "Comparisons.txt", 
+                  OrganDatabase = "org.Mm.eg.db",
+                  KEGGSpeciesName = "mmu",
+                  KEGGPathwayFile = KEGGPathway_file)
+```
+
+## Full tutorial
 
 ## 1, Merge featureCounts results into a table/matrix
 
@@ -61,7 +140,7 @@ Treated.rep2.featureCounts.gene.txt
 # The ShortName indicates the name in the final merged table, to make the names simplified
 # The Condition column is for future DE analysis, but won't be used in this function
 
-$ cat SampleInfoFile.txt
+$ cat SampleInfo.txt
 Control.rep1.featureCounts.gene.txt Control.rep1 Control
 Control.rep2.featureCounts.gene.txt Control.rep2 Control
 Treated.rep1.featureCounts.gene.txt Treated.rep1 Treated
@@ -72,10 +151,10 @@ Treated.rep2.featureCounts.gene.txt Treated.rep2 Treated
 MergeFeatureCounts(SampleInfoFile, OutputPrefix="default", write_to_file=F)
 
 # Example 1: return a merged table as data.frame
-MergedCounts <- MergeFeatureCounts(SampleInfoFile = "SampleInfoFile.txt")
+MergedCounts <- MergeFeatureCounts(SampleInfoFile = "SampleInfo.txt")
 
 # Example 2, return a merged table as data.frame, and write to a file
-MergedCounts <- MergeFeatureCounts(SampleInfoFile = "SampleInfoFile.txt", 
+MergedCounts <- MergeFeatureCounts(SampleInfoFile = "SampleInfo.txt", 
                    OutputPrefix = "Merged.featureCounts.txt",
                    write_to_file = F)
 ```
@@ -102,7 +181,7 @@ hg38.uniqueMatching.txt  #For human
 # The ShortName indicates the name in the final merged table, to make the names simplified
 # The Condition column is for future DE analysis, but won't be used in this function
 
-$ cat SampleInfoFile.txt
+$ cat SampleInfo.txt
 Control.rep1.quant.sf Control.rep1 Control
 Control.rep2.quant.sf Control.rep2 Control
 Treated.rep1.quant.sf Treated.rep1 Treated
@@ -113,11 +192,11 @@ Treated.rep2.quant.sf Treated.rep2 Treated
 MergeSalmon(SampleInfoFile, uniqueMatchingFile, OutputPrefix="default", write_to_file=F)
 
 # Example 1: return a merged Counts and TPM table as data.frame
-MergedCountsTPM <- MergeSalmon(SampleInfoFile = "SampleInfoFile.txt", 
+MergedCountsTPM <- MergeSalmon(SampleInfoFile = "SampleInfo.txt", 
                    uniqueMatchingFile = "mm10.uniqueMatching.txt")
 
 # Example 2, return a merged Counts and TPM table as data.frame, and write to a file
-MergedCountsTPM <- MergeSalmon(SampleInfoFile = "SampleInfoFile.txt", 
+MergedCountsTPM <- MergeSalmon(SampleInfoFile = "SampleInfo.txt", 
                    uniqueMatchingFile = "mm10.uniqueMatching.txt",
                    OutputPrefix = "Merged.salmon.CountsAndTPM.txt",
                    write_to_file = T)
@@ -127,7 +206,7 @@ This merged salmon table can be used to examine the TPM values, but won't be com
 
 ## 3, Run differential expression (DE) analysis from merged featureCounts table
 
-We can use any merged raw counts table (either from **MergeFeatureCounts**, or read from an external file) and perform DE analysis using one of the main function in this package: **easyDE_FromRawCounts**
+We can use any merged raw counts table (either from **MergeFeatureCounts**, or read from an external file) and perform DE analysis using one of the main function in this package: **easyDE_FromRawCounts**.
 
 ```
 # Prepare the sample information/Label file, with contains 3 columns: SampleFile, ShortName, Condition
@@ -135,7 +214,7 @@ We can use any merged raw counts table (either from **MergeFeatureCounts**, or r
 # The ShortName indicates the name in the final merged table, to make the names simplified
 # The Condition column is for future DE analysis, but won't be used in this function
 
-$ cat SampleInfoFile.txt
+$ cat SampleInfo.txt
 PS.rep1.featureCounts.gene.txt PS.rep1 PS
 PS.rep2.featureCounts.gene.txt PS.rep2 PS
 RS.rep1.featureCounts.gene.txt RS.rep1 RS
@@ -146,19 +225,19 @@ ART.rep2.featureCounts.gene.txt ART.rep2 ART
 # Prepare the comparison file, with 3 columns: Condition1, Condition2, ComparisonName/Output Prefix
 # The direction of the comparison: Condition2_vs_Condition1:
 
-$ cat comparison.txt
+$ cat Comparisons.txt
 PS RS Output.Human.RSvsPS
 PS ART Output.Human.ARTvsPS
 
 # Prepare the raw counts using MergeFeatureCounts function mentioned above
-MergedCounts <- MergeFeatureCounts(SampleInfoFile = "SampleInfoFile.txt")
+MergedCounts <- MergeFeatureCounts(SampleInfoFile = "SampleInfo.txt")
 
 # Turn on the createQuickomicsFiles=T and provide a output prefix for Quickomics file generation
 
 # Run the full DE analysis
 easyDE_FromRawCounts(count_matrix = MergedCounts, 
-                     LabelFile = "SampleInfoFile.txt", 
-                     ComparisonFile = "comparison.txt", 
+                     LabelFile = "SampleInfo.txt", 
+                     ComparisonFile = "Comparisons.txt", 
                      createQuickomicsFiles=T, 
                      QuickomicsPrefix="Two_DE_Analysis")
 ```
@@ -216,7 +295,7 @@ Treated.rep2.quant.sf Treated.rep2 Treated
 # You can include multiple lines of comparisons here. For each comparison, no need to cover all data.
 # The pipeline will subset data included in the comparison and run the analysis with those data only.
 
-$ cat comparison.txt
+$ cat Comparisons.txt
 Control Treated Output.Control_vs_Treated
 
 # Then we can run the following function:
@@ -225,7 +304,7 @@ Control Treated Output.Control_vs_Treated
 # Example 1: return a merged Counts and TPM table as data.frame
 easyDE_FromSalmon(SampleInfo = "SampleInfoFile.txt",
                   uniqueMatchingFile = "mm10.uniqueMatching.txt",
-                  ComparisonFile = "comparison.txt", 
+                  ComparisonFile = "Comparisons.txt", 
                   createQuickomicsFiles=T, QuickomicsPrefix="DEAnalysis")
 ```
 
@@ -251,4 +330,41 @@ DEAnalysis_Exp_RawTPMData.csv              #Raw TPM is suggested if you woule li
 DEAnalysis_Exp_rlogData.csv                #rlog is better at plotting heatmap/PCA plots, and it is adjusted for variance stablization
 DEAnalysis_ProteinGeneName_optional.csv
 DEAnalysis_Sample_metadata.csv
+```
+
+## 5, Run GO and GSEA analysis based on the DE results
+
+Please make sure DE analysis has been run before running this **easyEnrich_GO_GSEA** function. This function takes the comparison file as input, and look for DE analysis output files: ComparisonName.salmon.All.DEseq2GeneCountsTPMrlogNormcounts.txt for salmon, and ComparisonName.RawCounts.All.DEseq2GeneCountsNormcounts.txt for featureCounts results. If you have your own DESeq2 results, you can directly use it by renaming to the above two types of names. It recognizes the first a few columns of the DESeq2 results.
+
+Please choose the correct species GO annotation package and install it, for example, org.Mm.eg.db for mouse, and org.Hs.eg.db for human. If less than 10 genes in the comparison, it will skip, otherwise, use `forcerun = T` to force the pipeline to run it.
+
+```
+# See full manual page:
+??easyEnrich_GO_GSEA
+
+easyEnrich_GO_GSEA(ComparisonFile = "Comparisons.txt", 
+                  OrganDatabase = "org.Mm.eg.db",
+                  GOpajd_cutoff = 0.05, 
+                  GOlog2FC_cutoff = 1.5,
+                  ShowTermNum = 20,
+                  forcerun = F)
+```
+
+## 6, Run KEGG analysis based on the DE results
+
+Please make sure DE analysis has been run before running this **easyEnrich_KEGG** function. Similar to **easyEnrich_GO_GSEA**, it also looks for DE output files and run KEGG enrichment analysis. The user can also provide a list of KEGG pathways and pass to `KEGGPathwayFile` to plot. This `KEGGPathwayFile` is a two-column, tab-delimited text file with: KEGG_id KEGG_full_name. If less than 10 genes in the comparison, it will skip, otherwise, use `forcerun = T` to force the pipeline to run it.
+
+```
+# See full manual page:
+??easyEnrich_KEGG
+
+easyEnrich_KEGG(
+  ComparisonFile = "Comparisons.txt",
+  OrganDatabase = "org.Mm.eg.db",
+  KEGGSpeciesName = "mmu",
+  KEGGPathwayFile = "PathwayID.txt",
+  GOpajd_cutoff = 0.05,
+  GOlog2FC_cutoff = 1.5,
+  forcerun = F
+)
 ```

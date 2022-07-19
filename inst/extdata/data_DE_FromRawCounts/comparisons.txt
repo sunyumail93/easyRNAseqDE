@@ -1,2 +1,1 @@
-neg pos Compare_PosToNeg
-control pos Compare_PosToControl
+Low High Comparison.Tcell.High_vs_Low
