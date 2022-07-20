@@ -44,7 +44,7 @@ The easyRNAseqDE contains four six functions:
 
 - Two functions perform the full DE analysis using salmon or featureCounts results: **easyDE_FromRawCounts** and **easyDE_FromSalmon**.
 
-- Two functions perform GO, GSEA and KEGG analysis: *easyEnrich_GO_GSEA* and *easyEnrich_KEGG*.
+- Two functions perform GO, GSEA and KEGG analysis: **easyEnrich_GO_GSEA** and **easyEnrich_KEGG**.
 
 Here is an example using the salmon test data to perform DE analysis within a minute:
 
@@ -73,20 +73,24 @@ easyDE_FromSalmon(SampleInfo = SampleInfo_path,
                   createQuickomicsFiles=T, QuickomicsPrefix="Immunity2018")
                   
 # GO and GSEA analysis
-easyEnrich_GO_GSEA(ComparisonFile = "Comparisons.txt", 
+easyEnrich_GO_GSEA(ComparisonFile = ComparisonFile_path, 
                   OrganDatabase = "org.Mm.eg.db", 
                   GOpajd_cutoff = 0.001, 
                   GOlog2FC_cutoff = 2.5)
 
 # KEGG analysis
 KEGGPathway_file <- system.file("extdata", "data_DE_FromSalmon/PathwayID.txt", package="easyRNAseqDE")
-easyEnrich_KEGG(ComparisonFile = "Comparisons.txt", 
+easyEnrich_KEGG(ComparisonFile = ComparisonFile_path, 
                   OrganDatabase = "org.Mm.eg.db",
                   KEGGSpeciesName = "mmu",
                   KEGGPathwayFile = KEGGPathway_file)
 ```
 
 Then we can upload the four csv files and visualize the results in [Quickomics](http://quickomics.bxgenomics.com/?unlisted=PRJ_Immunity2018_Cs9rRo).
+
+This pipeline also generates the following plots:
+
+![](images/Plots.png)
 
 Here is another example using the featureCounts test data to perform DE analysis within a minute:
 
@@ -109,14 +113,14 @@ easyDE_FromRawCounts(count_matrix = featureCounts_count_matrix,
                      QuickomicsPrefix="Immunity2018_featureCounts")
                      
 # GO and GSEA analysis
-easyEnrich_GO_GSEA(ComparisonFile = "Comparisons.txt", 
+easyEnrich_GO_GSEA(ComparisonFile = ComparisonFile_path, 
                   OrganDatabase = "org.Mm.eg.db", 
                   GOpajd_cutoff = 0.001, 
                   GOlog2FC_cutoff = 2.5)
 
 # KEGG analysis
 KEGGPathway_file <- system.file("extdata", "data_DE_FromRawCounts/PathwayID.txt", package="easyRNAseqDE")
-easyEnrich_KEGG(ComparisonFile = "Comparisons.txt", 
+easyEnrich_KEGG(ComparisonFile = ComparisonFile_path, 
                   OrganDatabase = "org.Mm.eg.db",
                   KEGGSpeciesName = "mmu",
                   KEGGPathwayFile = KEGGPathway_file)
