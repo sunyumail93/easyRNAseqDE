@@ -7,7 +7,7 @@ This package is for the downstream analysis after running [PipeRNAseq](https://g
 
 This R package is designed to analyze RNAseq raw counts (produced by featureCounts from Subread) or TPM values from Salmon software.
 
-The following packages in R are required
+The following packages in R (>= 3.5.0) are required
 
 ```
 DESeq2
@@ -75,7 +75,7 @@ easyDE_FromSalmon(SampleInfo = SampleInfo_path,
 # GO and GSEA analysis
 easyEnrich_GO_GSEA(ComparisonFile = ComparisonFile_path, 
                   OrganDatabase = "org.Mm.eg.db", 
-                  GOpajd_cutoff = 0.001, 
+                  GOpajd_cutoff = 0.01, 
                   GOlog2FC_cutoff = 2.5)
 
 # KEGG analysis
@@ -115,7 +115,7 @@ easyDE_FromRawCounts(count_matrix = featureCounts_count_matrix,
 # GO and GSEA analysis
 easyEnrich_GO_GSEA(ComparisonFile = ComparisonFile_path, 
                   OrganDatabase = "org.Mm.eg.db", 
-                  GOpajd_cutoff = 0.001, 
+                  GOpajd_cutoff = 0.01, 
                   GOlog2FC_cutoff = 2.5)
 
 # KEGG analysis
