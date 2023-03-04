@@ -207,6 +207,7 @@ easyDE_FromSalmon <- function(SampleInfo, uniqueMatchingFile, ComparisonFile, cr
         size          = 4,
         box.padding   = 1.5,
         point.padding = 0.5,
+        show.legend   = FALSE,    #This is critical to disable showing 'a' in the legend!
         segment.color = "grey50")
     ggplot2::ggsave(paste(OutputPrefix,".salmon.Plot.VolcanoPlot.pdf",sep = ""), width = 12,height = 10, plot3)
 
