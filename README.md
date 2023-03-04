@@ -3,7 +3,7 @@ An R package for RNAseq differential expression analysis and visualization, in a
 
 This package is for the downstream analysis after running [PipeRNAseq](https://github.com/sunyumail93/PipeRNAseq). Please download PipeRNAseq output files to the local computer and perform these analyses.
 
-This package was published with the following paper:
+This package was published with the following paper, and please consider citing it:
 
 1. Zhu, J., Chen K., Sun, Y.H., ..., 2023. [LSM1-mediated Major Satellite RNA decay is required for nonequilibrium histone H3. 3 incorporation into parental pronuclei](https://www.nature.com/articles/s41467-023-36584-z). _Nat Commun_, 14, 957
 
@@ -59,8 +59,11 @@ Here is an example using the salmon test data to perform DE analysis within a mi
 ```
 library(easyRNAseqDE)
 
-# Set working directory
-setwd("/home/sunyumail93/Demo")
+# Set your working directory
+# All results will be generated here
+# This is an example:
+CurrPath="/home/sunyumail93/Demo"
+setwd(CurrPath)
 
 # Copy the raw data to the working directory
 SalmonDataPath <- system.file("extdata", "data_DE_FromSalmon/", package="easyRNAseqDE")
