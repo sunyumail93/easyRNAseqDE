@@ -3,7 +3,7 @@ An R package for RNAseq differential expression analysis and visualization, in a
 
 This package is for the downstream analysis after running [PipeRNAseq](https://github.com/sunyumail93/PipeRNAseq). Please download PipeRNAseq output files to the local computer and perform these analyses.
 
-This package has been used in the following publication:
+This package was published with the following paper:
 
 1. Zhu, J., Chen K., Sun, Y.H., ..., 2023. [LSM1-mediated Major Satellite RNA decay is required for nonequilibrium histone H3. 3 incorporation into parental pronuclei](https://www.nature.com/articles/s41467-023-36584-z). _Nat Commun_, 14, 957
 
