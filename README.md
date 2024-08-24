@@ -41,6 +41,16 @@ If you would like to perform GO, KEGG, and GSEA analysis, the database related t
 library(devtools)
 install_github("sunyumail93/easyRNAseqDE")
 
+#If you encounter errors, such as:
+#ERROR: dependencies 'tximport', 'clusterProfiler', 'DOSE', 'pathview', 'DESeq2' are not available for package 'easyRNAseqDE'
+#Manually install these Bioconductor packages:
+BiocManager::install("tximport")
+BiocManager::install("clusterProfiler")
+BiocManager::install("DOSE")
+BiocManager::install("pathview")
+BiocManager::install("DESeq2")
+#Then run the above install_github command again.
+
 library(easyRNAseqDE)
 ```
 
